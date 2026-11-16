@@ -52,7 +52,7 @@ def AUTHOR(img, alt, head, name_html, text):
             f'<p style="margin: 0; line-height: 1.6; color: #555;">{text}</p></div></div>')
 RODERICK = 'https://cdn.webshopapp.com/shops/293467/files/495011501/roderick-klein.jpg'
 CALC_NL = 'https://sitecom244.github.io/stretchfolie-checker/'
-CALC_H = 'clamp(730px, calc(1560px - 102vw), 1200px)'
+CALC_H = 'clamp(840px, calc(1600px - 100vw), 1240px)'
 
 def write(name, html):
     open(os.path.join(OUT, name), 'w').write(html)
