@@ -84,8 +84,8 @@
 
 <!-- ===================== GRAFIEK ===================== -->
 <section id="viewGrafiek">
-  <h2>Grondstofprijzen kunststof</h2>
-  <p class="sub">Weekprijzen per ton. Laatste notering: <strong id="lastDate"></strong>. Wekelijks bijgehouden door onze inkoop.</p>
+  <h2 data-t="title"></h2>
+  <p class="sub"><span data-t="sub1"></span> <strong id="lastDate"></strong>. <span data-t="sub2"></span></p>
 
   <div class="update" id="updateBox" hidden>
     <div class="h" id="updateTitle"></div>
@@ -94,24 +94,24 @@
   </div>
 
   <div class="controls">
-    <div class="ctrl"><span class="lbl">Markt</span>
+    <div class="ctrl"><span class="lbl" data-t="market"></span>
       <div class="seg" id="segMarket" role="group" aria-label="Markt">
-        <button type="button" data-v="DE" aria-pressed="true">Europa (Duitsland)</button>
-        <button type="button" data-v="CN" aria-pressed="false">Azië (China)</button>
+        <button type="button" data-v="DE" aria-pressed="true" data-t="mDE"></button>
+        <button type="button" data-v="CN" aria-pressed="false" data-t="mCN"></button>
       </div>
     </div>
-    <div class="ctrl"><span class="lbl">Periode</span>
+    <div class="ctrl"><span class="lbl" data-t="period"></span>
       <div class="seg" id="segRange" role="group" aria-label="Periode">
-        <button type="button" data-v="26" aria-pressed="false">6 mnd</button>
-        <button type="button" data-v="52" aria-pressed="true">1 jaar</button>
-        <button type="button" data-v="104" aria-pressed="false">2 jaar</button>
-        <button type="button" data-v="all" aria-pressed="false">Alles</button>
+        <button type="button" data-v="26" aria-pressed="false" data-t="r26"></button>
+        <button type="button" data-v="52" aria-pressed="true" data-t="r52"></button>
+        <button type="button" data-v="104" aria-pressed="false" data-t="r104"></button>
+        <button type="button" data-v="all" aria-pressed="false" data-t="rall"></button>
       </div>
     </div>
-    <div class="ctrl"><span class="lbl">Weergave</span>
+    <div class="ctrl"><span class="lbl" data-t="view"></span>
       <div class="seg" id="segMode" role="group" aria-label="Weergave">
-        <button type="button" data-v="price" aria-pressed="true">Prijs per ton</button>
-        <button type="button" data-v="index" aria-pressed="false">Index (start = 100)</button>
+        <button type="button" data-v="price" aria-pressed="true" data-t="vprice"></button>
+        <button type="button" data-v="index" aria-pressed="false" data-t="vindex"></button>
       </div>
     </div>
   </div>
@@ -123,36 +123,36 @@
     <svg id="chart" role="img" aria-label="Lijngrafiek met weekprijzen van kunststof grondstoffen"></svg>
     <div class="tip" id="tip"></div>
   </div>
-  <p class="note" id="unitNote">Marktnoteringen per ton grondstof (korrel), exclusief transport, verwerking en btw. Dit zijn geen prijzen van eindproducten.</p>
+  <p class="note" id="unitNote" data-t="unit"></p>
 
   <details>
-    <summary>Bekijk de cijfers als tabel</summary>
+    <summary data-t="table"></summary>
     <div class="tablewrap"><table id="table"></table></div>
   </details>
 </section>
 
 <!-- ===================== CALCULATOR ===================== -->
 <section id="viewCalc" hidden>
-  <h2>Wat betekent een grondstofstijging voor jouw inkoop?</h2>
-  <p class="sub">Kies je product en vul in wat je er per jaar aan uitgeeft. De uitkomst verandert direct mee.</p>
+  <h2 data-t="ctitle"></h2>
+  <p class="sub" data-t="csub"></p>
   <div class="calcwrap"><div>
   <div class="grid2">
-    <div><label for="cProduct">Product</label>
+    <div><label for="cProduct" data-t="cprod"></label>
       <select id="cProduct"></select>
       <div class="hint" id="cPolyHint"></div>
     </div>
-    <div><label for="cSpend">Jouw inkoop per jaar (€, excl. btw)</label>
+    <div><label for="cSpend" data-t="cspend"></label>
       <input type="number" inputmode="decimal" id="cSpend" value="5000" min="0">
     </div>
-    <div><label for="cPeriod">Grondstofbeweging over</label>
+    <div><label for="cPeriod" data-t="cper"></label>
       <select id="cPeriod">
-        <option value="13">de afgelopen 3 maanden</option>
-        <option value="26">de afgelopen 6 maanden</option>
-        <option value="52" selected>het afgelopen jaar</option>
-        <option value="custom">eigen percentage invullen</option>
+        <option value="13" data-t="p13"></option>
+        <option value="26" data-t="p26"></option>
+        <option value="52" selected data-t="p52"></option>
+        <option value="custom" data-t="pcust"></option>
       </select>
     </div>
-    <div><label for="cPct">Verandering grondstof (%)</label>
+    <div><label for="cPct" data-t="cpct"></label>
       <input type="number" inputmode="decimal" id="cPct" step="0.1">
       <div class="hint" id="cPctHint"></div>
     </div>
@@ -164,40 +164,124 @@
 <script>
 const DATA = {"updated":"2026-08-31","markets":{"DE":{"dates":["2024-01-01","2024-01-08","2024-01-15","2024-01-22","2024-01-29","2024-02-05","2024-02-12","2024-02-19","2024-02-26","2024-03-04","2024-03-11","2024-03-18","2024-03-25","2024-04-01","2024-04-08","2024-04-15","2024-04-22","2024-04-29","2024-05-06","2024-05-13","2024-05-20","2024-05-27","2024-06-03","2024-06-10","2024-06-17","2024-06-24","2024-07-01","2024-07-08","2024-07-15","2024-07-22","2024-07-29","2024-08-05","2024-08-12","2024-08-19","2024-08-26","2024-09-02","2024-09-09","2024-09-16","2024-09-23","2024-09-30","2024-10-07","2024-10-14","2024-10-21","2024-10-28","2024-11-04","2024-11-11","2024-11-18","2024-11-25","2024-12-02","2024-12-09","2024-12-16","2024-12-23","2024-12-30","2025-01-06","2025-01-13","2025-01-20","2025-01-27","2025-02-03","2025-02-10","2025-02-17","2025-02-24","2025-03-03","2025-03-10","2025-03-17","2025-03-24","2025-03-31","2025-04-07","2025-04-14","2025-04-21","2025-04-28","2025-05-05","2025-05-12","2025-05-19","2025-05-26","2025-06-02","2025-06-09","2025-06-16","2025-06-23","2025-06-30","2025-07-07","2025-07-14","2025-07-21","2025-07-28","2025-08-04","2025-08-11","2025-08-18","2025-08-25","2025-09-01","2025-09-08","2025-09-15","2025-09-22","2025-09-29","2025-10-06","2025-10-13","2025-10-20","2025-10-27","2025-11-03","2025-11-10","2025-11-17","2025-11-24","2025-12-01","2025-12-08","2025-12-15","2025-12-22","2025-12-29","2026-01-05","2026-01-12","2026-01-19","2026-01-26","2026-02-02","2026-02-09","2026-02-16","2026-02-23","2026-03-02","2026-03-09","2026-03-16","2026-03-23","2026-03-30","2026-04-06","2026-04-13","2026-04-20","2026-04-27","2026-05-04","2026-05-11","2026-05-18","2026-05-25","2026-06-01","2026-06-08","2026-06-15","2026-06-22","2026-06-29","2026-07-06","2026-07-13","2026-07-20","2026-07-27","2026-08-03","2026-08-10","2026-08-17","2026-08-24","2026-08-31"],"series":{"LDPE":[1648,1648,1648,1648,1648,1648,1653,1653,1718,1768,1788,1788,1848,1858,1858,1858,1858,1858,1858,1848,1848,1828,1828,1813,1808,1798,1798,1798,1798,1798,1798,1798,1808,1808,1808,1818,1818,1818,1818,1838,1838,1838,1818,1818,1818,1818,1818,1818,1818,1818,1818,1818,1818,1818,1818,1823,1828,1838,1838,1878,1918,1938,1938,1948,1958,1968,1968,1968,1968,1968,1968,1948,1938,1898,1898,1898,1898,1898,1898,1898,1898,1898,1898,1898,1898,1898,1898,1898,1898,1898,1878,1878,1878,1878,1878,1858,1848,1848,1838,1833,1823,1823,1823,1833,1843,1843,1843,1843,1853,1873,1873,1878,1888,1903,1913,2023,2188,2303,2353,2753,2778,2953,2953,2993,3013,3033,3053,3043,2953,2903,2788,2738,2588,2588,2538,2488,2488,2488,2488,2528],"LLDPE":[1483,1483,1483,1483,1483,1483,1488,1488,1553,1583,1603,1603,1643,1653,1653,1653,1653,1653,1653,1643,1643,1613,1613,1598,1583,1583,1583,1583,1583,1583,1583,1583,1593,1593,1593,1613,1613,1613,1613,1613,1613,1613,1593,1593,1593,1593,1593,1593,1593,1593,1593,1593,1593,1593,1593,1598,1603,1603,1603,1633,1663,1683,1683,1683,1683,1693,1693,1693,1693,1693,1693,1673,1663,1623,1623,1623,1623,1623,1623,1623,1623,1623,1623,1623,1623,1623,1623,1623,1623,1623,1603,1603,1603,1603,1603,1583,1573,1573,1563,1558,1548,1548,1548,1548,1548,1548,1548,1548,1548,1553,1553,1553,1558,1573,1583,1673,1843,1963,2013,2413,2438,2583,2583,2613,2633,2663,2683,2673,2583,2533,2443,2393,2243,2243,2168,2143,2143,2143,2143,2163],"HDPE":[1378,1378,1378,1378,1378,1378,1383,1383,1428,1448,1468,1468,1508,1508,1508,1508,1508,1508,1508,1498,1498,1488,1488,1473,1468,1458,1458,1458,1458,1458,1458,1458,1468,1468,1468,1468,1468,1468,1468,1468,1468,1468,1468,1448,1448,1448,1448,1448,1448,1448,1448,1448,1448,1448,1448,1453,1458,1468,1468,1498,1518,1538,1538,1538,1548,1558,1558,1558,1558,1558,1558,1538,1528,1488,1488,1488,1488,1488,1488,1488,1488,1488,1488,1488,1488,1488,1488,1488,1488,1488,1468,1468,1468,1468,1468,1448,1448,1448,1438,1423,1423,1423,1423,1423,1423,1423,1423,1423,1423,1423,1423,1423,1428,1438,1448,1548,1678,1828,1878,2278,2303,2428,2428,2458,2478,2508,2528,2518,2428,2378,2328,2278,2128,2128,2018,2018,2018,2018,2018,2038],"PPROP":[1278,1278,1278,1278,1308,1338,1353,1408,1438,1438,1468,1473,1508,1508,1508,1528,1528,1528,1528,1518,1518,1513,1508,1478,1478,1478,1468,1468,1468,1478,1478,1478,1488,1488,1488,1508,1508,1498,1498,1488,1488,1488,1448,1448,1448,1448,1448,1448,1448,1448,1448,1448,1448,1448,1448,1458,1458,1458,1458,1488,1518,1518,1518,1518,1518,1518,1508,1488,1488,1478,1433,1433,1393,1378,1378,1378,1378,1378,1368,1368,1368,1368,1358,1358,1358,1348,1348,1338,1338,1338,1328,1318,1318,1318,1318,1298,1298,1293,1288,1273,1273,1273,1273,1273,1273,1273,1273,1273,1273,1273,1273,1273,1278,1288,1298,1323,1423,1678,1678,1818,2168,2298,2298,2338,2368,2368,2368,2358,2318,2268,2168,2128,2018,1968,1918,1918,1918,1918,1918,1938],"PET":[1126,1126,1126,1126,1169,1223,1223,1223,1223,1223,1223,1223,1223,1223,1223,1223,1223,1212,1212,1201,1201,1201,1179,1168,1168,1168,1168,1168,1211,1211,1211,1211,1211,1222,1222,1222,1222,1222,1222,1179,1179,1179,1168,1152,1147,1147,1147,1147,1158,1158,1136,1136,1136,1136,1136,1125,1125,1093,1093,1093,1115,1115,1115,1115,1115,1131,1131,1131,1082,1071,1060,1060,1060,1060,1038,1038,1027,1005,1005,1005,1005,994,994,983,983,983,983,983,983,983,983,972,951,951,951,929,929,929,929,929,929,929,929,940,940,940,940,873,883,883,883,883,883,883,893,893,1083,1383,1383,1383,1433,1433,1473,1473,1473,1483,1483,1483,1483,1453,1383,1343,1343,1283,1283,1238,1238,1238,1238,1238],"PVC":[1018,1018,1018,988,988,988,988,988,988,988,988,998,1003,1003,1003,1003,1003,1018,1013,1013,1008,1008,1008,998,978,948,923,923,933,933,933,933,933,933,938,938,938,928,948,953,963,953,953,948,948,948,948,948,953,953,938,938,938,938,938,938,938,938,938,938,948,948,948,948,948,963,963,958,953,953,953,943,943,933,928,928,928,928,928,928,928,928,928,928,923,923,923,923,923,923,923,923,923,923,923,923,923,913,908,908,908,908,908,908,908,908,908,873,868,868,868,868,868,868,888,898,918,928,978,1028,1173,1228,1228,1248,1248,1258,1258,1233,1218,1208,null,1183,1108,1008,1008,1008,1008,1008,1008,1008],"PS":[1630,1630,1630,1625,1625,1625,1725,1725,1725,1725,1750,1800,1860,1860,1860,1880,1880,1900,1900,1850,1815,1800,1800,1795,1780,1780,1770,1665,1665,1645,1645,1645,1680,1725,1725,1725,1725,1725,1725,1725,1675,1520,1520,1520,1520,1520,1520,1520,1520,1520,1520,1520,1520,1520,1530,1550,1555,1555,1580,1590,1590,1610,1630,1630,1650,1670,1650,1620,1612,1612,1612,1587,1572,1572,1572,1540,1530,1530,1525,1475,1465,1465,1455,1455,1440,1440,1420,1420,1390,1385,1375,1375,1375,1345,1335,1335,1325,1325,1315,1305,1305,1310,1325,1325,1325,1325,1330,1345,1345,1345,1365,1365,1435,1465,1480,1535,1715,1715,1730,1880,2025,2180,2195,2210,2230,2250,2250,2250,2245,2245,2220,2200,1950,1950,1920,1920,1930,2020,2060,2060],"ABS":[1948,1948,1948,1948,1948,1948,1948,1973,2023,2048,2073,2073,2173,2173,2173,2173,2193,2223,2223,2223,2173,2173,2173,2173,2138,2138,2138,2098,2098,2098,2098,2098,2153,2153,2153,2173,2173,2173,2173,2123,2113,2113,2073,2063,2063,2063,2063,2063,2073,2073,2073,2068,2068,2068,2068,2083,2083,2083,2083,2103,2123,2123,2123,2123,2123,2133,2133,2078,2073,2073,2073,2073,2023,2023,2023,2023,1983,1973,1973,1973,1933,1933,1933,1933,1933,1933,1913,1913,1889,1889,1889,1883,1883,1873,1873,1853,1843,1843,1833,1823,1823,1823,1823,1823,1833,1833,1833,1833,1833,1833,1853,1863,1883,1903,1913,1913,1913,1973,1973,1998,2273,2443,2443,2443,2493,2533,2543,2543,2523,2513,2513,2513,2263,2223,2223,2223,2223,2223,2323,2323]}},"CN":{"dates":["2024-01-01","2024-01-08","2024-01-15","2024-01-22","2024-01-29","2024-02-05","2024-02-12","2024-02-19","2024-02-26","2024-03-04","2024-03-11","2024-03-18","2024-03-25","2024-04-01","2024-04-08","2024-04-15","2024-04-22","2024-04-29","2024-05-06","2024-05-13","2024-05-20","2024-05-27","2024-06-03","2024-06-10","2024-06-17","2024-06-24","2024-07-01","2024-07-08","2024-07-15","2024-07-22","2024-07-29","2024-08-05","2024-08-12","2024-08-19","2024-08-26","2024-09-02","2024-09-09","2024-09-16","2024-09-23","2024-09-30","2024-10-07","2024-10-14","2024-10-21","2024-10-28","2024-11-04","2024-11-11","2024-11-18","2024-11-25","2024-12-02","2024-12-09","2024-12-16","2024-12-23","2024-12-30","2025-01-06","2025-01-13","2025-01-20","2025-01-27","2025-02-03","2025-02-10","2025-02-17","2025-02-24","2025-03-03","2025-03-10","2025-03-17","2025-03-24","2025-03-31","2025-04-07","2025-04-14","2025-04-21","2025-04-28","2025-05-05","2025-05-12","2025-05-19","2025-05-26","2025-06-02","2025-06-09","2025-06-16","2025-06-23","2025-06-30","2025-07-07","2025-07-14","2025-07-21","2025-07-28","2025-08-04","2025-08-11","2025-08-18","2025-08-25","2025-09-01","2025-09-08","2025-09-15","2025-09-22","2025-09-29","2025-10-06","2025-10-13","2025-10-20","2025-10-27","2025-11-03","2025-11-10","2025-11-17","2025-11-24","2025-12-01","2025-12-08","2025-12-15","2025-12-22","2025-12-29","2026-01-05","2026-01-12","2026-01-19","2026-01-26","2026-02-02","2026-02-09","2026-02-16","2026-02-23","2026-03-02","2026-03-09","2026-03-16","2026-03-23","2026-03-30","2026-04-06","2026-04-13","2026-04-20","2026-04-27","2026-05-04","2026-05-11","2026-05-18","2026-05-25","2026-06-01","2026-06-08","2026-06-15","2026-06-22","2026-06-29","2026-07-06","2026-07-13","2026-07-20","2026-07-27","2026-08-03","2026-08-10","2026-08-17","2026-08-24","2026-08-31"],"series":{"LDPE":[1020,1020,1070,1080,1075,1085,1085,1085,1085,1085,1085,1085,1085,1080,1080,1080,1100,1100,1125,1125,1130,1135,1130,1170,1200,1210,1210,1210,1210,1200,1200,1190,1170,1150,1150,1150,1150,1150,1150,1160,1160,1170,1190,1190,1190,1190,1190,1170,1170,1170,1190,1185,1185,1185,1180,1175,1170,1170,1170,1180,1185,1190,1170,1170,1165,1170,1170,1130,1130,1100,1090,1090,1065,1070,1050,1055,1055,1075,1075,1075,1080,1080,1085,1085,1085,1075,1075,1075,1080,1080,1080,1075,1075,1075,1065,1065,1045,1030,1030,1005,990,980,970,960,960,960,950,960,960,990,980,990,990,990,1080,1180,1235,1415,1460,1560,1520,1465,1475,1475,1470,1455,1365,1310,1295,1255,1190,1195,1145,1215,1195,1210,1215,1220,1240,1260],"LLDPE":[935,935,965,955,945,945,945,945,945,945,940,940,935,930,925,925,945,945,960,965,965,970,965,975,975,975,975,980,975,965,955,945,945,935,935,935,930,930,930,940,940,955,965,965,965,960,955,945,945,935,935,950,950,950,945,940,935,935,935,930,935,935,935,935,930,935,945,895,895,875,875,875,850,865,835,840,840,865,865,865,865,865,860,860,860,855,855,855,855,855,855,855,855,855,845,840,835,835,835,815,795,795,790,775,775,775,765,775,775,785,775,785,785,785,845,935,955,1080,1165,1215,1195,1155,1180,1180,1160,1140,1110,1085,1070,1010,985,960,905,985,955,925,935,975,1005,995],"HDPE":[877,877,897,907,917,922,922,922,922,907,912,912,912,912,912,912,912,912,927,932,932,937,932,937,937,937,937,937,937,932,927,922,922,902,897,897,897,897,897,907,907,917,917,917,917,917,917,907,897,897,877,877,877,877,877,877,872,872,872,872,872,872,872,872,872,877,877,857,857,852,852,852,847,852,847,847,847,857,857,857,857,857,857,857,857,857,857,857,857,857,857,857,857,857,852,852,847,847,847,842,837,827,827,817,817,817,822,827,797,807,817,827,827,822,892,1012,1012,1127,1172,1262,1262,1227,1207,1207,1207,1192,1167,1117,1107,1087,997,972,972,1002,1002,1002,997,1017,1022,997],"PPROP":[968,968,953,953,958,963,963,963,963,968,968,968,983,983,983,993,993,993,1008,1008,1003,1013,1023,1028,1028,1018,1018,1023,1013,1008,1008,1008,998,993,983,988,963,958,958,963,983,988,988,983,983,983,983,983,983,978,973,973,973,973,968,968,968,968,968,973,973,973,973,968,963,958,963,953,953,953,943,933,953,963,963,963,953,963,953,973,983,983,973,958,958,958,953,948,948,938,933,933,928,928,918,893,893,878,863,858,853,858,853,848,843,843,858,873,893,908,913,913,913,933,1023,1173,1273,1303,1323,1323,1333,1333,1323,1333,1338,1313,1303,1303,1293,1223,1098,1093,1078,1133,1143,1178,1183,1183,1198,1198],"PET":[815,815,820,830,860,865,865,865,835,850,835,835,835,835,855,855,845,845,845,820,815,820,845,825,825,830,830,840,860,860,850,835,825,825,820,820,795,775,745,770,790,805,780,775,740,740,740,740,730,735,720,740,740,740,730,750,745,745,735,750,750,745,740,735,735,740,740,665,680,675,695,695,725,725,720,720,715,730,730,720,720,710,715,735,725,715,710,715,710,705,700,695,695,695,685,675,690,685,690,690,685,695,689,685,715,715,745,745,745,770,770,775,775,785,845,955,1145,1095,1105,1135,1115,1145,1175,1195,1160,1125,1075,1075,1040,970,950,885,895,945,945,935,925,930,980,990],"PVC":[740,740,740,740,760,760,760,760,775,780,780,780,785,785,785,785,770,770,770,770,780,785,795,805,805,815,805,790,790,790,795,795,790,790,735,735,740,740,740,745,755,755,735,735,755,755,755,755,745,745,745,735,735,735,735,715,720,720,720,720,715,715,715,715,690,690,690,690,695,690,695,695,695,705,705,705,705,705,715,710,710,710,695,695,695,695,725,700,700,700,700,700,700,700,700,685,685,685,685,685,655,635,635,635,634,634,655,655,675,685,695,715,715,715,745,845,1045,1070,1070,1060,1050,1045,1045,1045,985,925,855,845,755,745,745,740,740,745,775,805,805,805,815,815],"PS":[1150,1150,1150,1170,1180,1180,1200,1200,1220,1250,1260,1275,1285,1280,1285,1310,1310,1330,1305,1305,1305,1315,1315,1295,1300,1290,1285,1295,1295,1270,1250,1250,1250,1255,1250,1250,1250,1240,1240,1240,1240,1240,1220,1220,1215,1215,1210,1210,1200,1200,1200,1210,1210,1210,1185,1180,1190,1190,1195,1200,1200,1190,1175,1155,1155,1140,1140,1140,1140,1135,1095,1095,1125,1125,1105,1095,1080,1080,1080,1080,1080,1080,1080,1080,1070,1060,1060,1060,1055,1050,1050,1030,1030,1030,1015,1010,990,990,990,990,990,985,980,980,980,980,985,995,1015,1035,1085,1085,1085,1105,1155,1335,1435,1580,1660,1680,1665,1600,1570,1570,1540,1540,1465,1430,1370,1350,1290,1270,1160,1220,1280,1280,1270,1270,1280,1290],"ABS":[1290,1290,1290,1340,1340,1340,1360,1360,1380,1415,1425,1440,1445,1450,1455,1470,1490,1510,1510,1510,1510,1530,1530,1510,1505,1495,1495,1505,1505,1505,1505,1505,1505,1520,1515,1515,1515,1505,1505,1500,1510,1510,1480,1480,1475,1475,1470,1470,1465,1465,1460,1470,1470,1470,1470,1470,1470,1470,1480,1490,1490,1480,1470,1450,1450,1440,1440,1430,1410,1410,1390,1380,1410,1410,1390,1390,1370,1380,1380,1370,1355,1355,1355,1345,1345,1345,1345,1335,1325,1320,1320,1310,1305,1305,1285,1285,1260,1260,1260,1260,1260,1255,1230,1230,1230,1230,1240,1250,1280,1330,1339,1360,1360,1375,1425,1610,1800,1850,1950,1950,1935,1900,1910,1900,1870,1890,1800,1780,1630,1620,1580,1560,1550,1560,1580,1580,1550,1580,1580,1550]}}}};
 const UPDATE = {
-  "date": "2026-08-31",
-  "title": "Marktupdate week 36: PE na de zomer weer licht omhoog",
-  "text": "LDPE in Europa staat op 2.528 per ton, 1,6% hoger dan vorige week. LLDPE (stretchfolie) en HDPE stegen rond de 1%. Na de piek van begin juni is PE nog 17 tot 19% goedkoper, maar wel 35 tot 45% duurder dan in januari. Plan je een grote bestelling folie of zakken? Dan is dit een redelijk moment: de prijzen zijn stabiel en we verwachten op korte termijn geen grote sprongen.",
-  "by": "Roderick Klaver, inkoop VerpakkingenXL"
+  "nl": {
+    "date": "2026-08-31",
+    "title": "Marktupdate week 36: PE na de zomer weer licht omhoog",
+    "text": "LDPE in Europa staat op 2.528 per ton, 1,6% hoger dan vorige week. LLDPE (stretchfolie) en HDPE stegen rond de 1%. Na de piek van begin juni is PE nog 17 tot 19% goedkoper, maar wel 35 tot 45% duurder dan in januari. Plan je een grote bestelling folie of zakken? Dan is dit een redelijk moment: de prijzen zijn stabiel en we verwachten op korte termijn geen grote sprongen.",
+    "by": "Roderick Klaver, inkoop VerpakkingenXL"
+  },
+  "fr": {
+    "date": "2026-08-31",
+    "title": "Point marché semaine 36 : le PE remonte légèrement après l'été",
+    "text": "Le LDPE en Europe s'établit à 2 528 par tonne, soit 1,6 % de plus que la semaine dernière. Le LLDPE (film étirable) et le HDPE ont progressé d'environ 1 %. Depuis le pic de début juin, le PE est encore 17 à 19 % moins cher, mais 35 à 45 % plus cher qu'en janvier. Vous prévoyez une grosse commande de film ou de sacs ? C'est un moment raisonnable : les prix sont stables et nous ne prévoyons pas de forte hausse à court terme.",
+    "by": "Roderick Klaver, achats VerpakkingenXL"
+  },
+  "de": {
+    "date": "2026-08-31",
+    "title": "Marktupdate KW 36: PE nach dem Sommer wieder leicht gestiegen",
+    "text": "LDPE in Europa liegt bei 2.528 pro Tonne, 1,6 % höher als in der Vorwoche. LLDPE (Stretchfolie) und HDPE stiegen um etwa 1 %. Seit dem Höchststand Anfang Juni ist PE noch 17 bis 19 % günstiger, aber 35 bis 45 % teurer als im Januar. Planen Sie eine größere Bestellung Folie oder Beutel? Dann ist jetzt ein guter Zeitpunkt: Die Preise sind stabil und wir erwarten kurzfristig keine großen Sprünge.",
+    "by": "Roderick Klaver, Einkauf VerpackungenXL"
+  }
 }
 ;
 
-const POLY = {
-  LDPE:  { name: 'LDPE',  color: '#0b99bc', desc: 'noppenfolie, coex verzendzakken, LDPE-zakken' },
-  LLDPE: { name: 'LLDPE', color: '#eb6834', desc: 'stretchfolie' },
-  HDPE:  { name: 'HDPE',  color: '#6250d6', desc: 'dunne (ritsel)zakjes, afvalzakken' },
-  PPROP: { name: 'PP',    color: '#eda100', desc: 'tape, PP-band, PP-zakken' },
-  PET:   { name: 'PET',   color: '#e87ba4', desc: 'flessen, bakjes, PET-band' },
-  PVC:   { name: 'PVC',   color: '#008300', desc: 'PVC-tape, krimpfolie' },
-  PS:    { name: 'PS',    color: '#1c5cab', desc: 'bekers, schuim' },
-  ABS:   { name: 'ABS',   color: '#e34948', desc: 'harde kunststof onderdelen' }
+const params = new URLSearchParams(location.search);
+const SHOP = ({ be: 'be', befr: 'befr', de: 'de' })[params.get('shop')] || 'nl';
+const LANG = SHOP === 'befr' ? 'fr' : SHOP === 'de' ? 'de' : 'nl';
+const LOCALE = { nl: 'nl-NL', be: 'nl-BE', befr: 'fr-BE', de: 'de-DE' }[SHOP];
+document.documentElement.lang = LANG;
+
+const I18N = {
+  nl: {
+    title: 'Grondstofprijzen kunststof', sub1: 'Weekprijzen per ton. Laatste notering:', sub2: 'Wekelijks bijgehouden door onze inkoop.',
+    market: 'Markt', mDE: 'Europa (Duitsland)', mCN: 'Azië (China)', period: 'Periode', r26: '6 mnd', r52: '1 jaar', r104: '2 jaar', rall: 'Alles',
+    view: 'Weergave', vprice: 'Prijs per ton', vindex: 'Index (start = 100)',
+    unit: 'Marktnoteringen per ton grondstof (korrel), exclusief transport, verwerking en btw. Dit zijn geen prijzen van eindproducten.',
+    table: 'Bekijk de cijfers als tabel', perTon: 'per ton', weekOf: 'Week van', usedFor: 'Gebruikt voor: ', w4: '4 weken', y1: '1 jaar', na: 'n.b.',
+    ctitle: 'Wat betekent een grondstofstijging voor jouw inkoop?', csub: 'Kies je product en vul in wat je er per jaar aan uitgeeft. De uitkomst verandert direct mee.',
+    cprod: 'Product', cspend: 'Jouw inkoop per jaar (€, excl. btw)', cper: 'Grondstofbeweging over', p13: 'de afgelopen 3 maanden', p26: 'de afgelopen 6 maanden', p52: 'het afgelopen jaar', pcust: 'eigen percentage invullen',
+    cpct: 'Verandering grondstof (%)', polyHint: (n) => 'Grondstof: ' + n + ' (notering Europa)', custHint: 'Eigen percentage. Gebruik een minteken voor een daling.',
+    moved: (n, a, da, b, db) => n + ' ging van ' + a + ' (' + da + ') naar ' + b + ' per ton (' + db + ').',
+    fillIn: 'Vul je inkoop per jaar en een percentage in.', noMove: 'Geen grondstofbeweging, dus geen effect op je kosten vanuit de grondstof.',
+    up: (p, r) => 'Je kosten voor ' + p + ' kunnen met ' + r + ' per jaar stijgen.', down: (p, r) => 'Je kosten voor ' + p + ' kunnen met ' + r + ' per jaar dalen.',
+    to: ' tot ', rGrond: 'Grondstof ', rShare: 'Aandeel grondstof in de kostprijs', rEffect: 'Verwacht effect op de productprijs', rNow: 'Jouw inkoop nu', rAfter: 'Jouw inkoop na doorrekening',
+    note: 'Indicatie. Grondstof is ongeveer 60 tot 70% van de kostprijs van folie en zakken. De rest is productie, energie, verpakking en transport. Een beweging in de grondstof komt meestal met enkele weken vertraging in de inkoopprijs terecht.',
+    view_: 'Bekijk ',
+    months: ['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'],
+    monthsLong: ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'],
+    desc: { LDPE: 'noppenfolie, coex verzendzakken, LDPE-zakken', LLDPE: 'stretchfolie', HDPE: 'dunne (ritsel)zakjes, afvalzakken', PPROP: 'tape, PP-band, PP-zakken', PET: 'flessen, bakjes, PET-band', PVC: 'PVC-tape, krimpfolie', PS: 'bekers, schuim', ABS: 'harde kunststof onderdelen' },
+    prod: { stretch: 'Stretchfolie (hand- en machinefolie)', coex: 'Coex verzendzakken', nop: 'Noppenfolie', ldpe: 'LDPE-zakken en gripzakjes', hdpe: 'HDPE-zakken (dunne zakjes, afvalzakken)' }
+  },
+  fr: {
+    title: 'Prix des matières premières plastiques', sub1: 'Prix hebdomadaires par tonne. Dernière cotation :', sub2: 'Suivis chaque semaine par notre service achats.',
+    market: 'Marché', mDE: 'Europe (Allemagne)', mCN: 'Asie (Chine)', period: 'Période', r26: '6 mois', r52: '1 an', r104: '2 ans', rall: 'Tout',
+    view: 'Affichage', vprice: 'Prix par tonne', vindex: 'Indice (début = 100)',
+    unit: 'Cotations de marché par tonne de matière première (granulés), hors transport, transformation et TVA. Ce ne sont pas des prix de produits finis.',
+    table: 'Voir les chiffres sous forme de tableau', perTon: 'par tonne', weekOf: 'Semaine du', usedFor: 'Utilisé pour : ', w4: '4 semaines', y1: '1 an', na: 'n.d.',
+    ctitle: 'Que signifie une hausse des matières premières pour vos achats ?', csub: 'Choisissez votre produit et indiquez votre budget annuel. Le résultat se met à jour directement.',
+    cprod: 'Produit', cspend: 'Vos achats par an (€, HTVA)', cper: 'Évolution de la matière première sur', p13: 'les 3 derniers mois', p26: 'les 6 derniers mois', p52: 'la dernière année', pcust: 'saisir votre propre pourcentage',
+    cpct: 'Variation matière première (%)', polyHint: (n) => 'Matière première : ' + n + ' (cotation Europe)', custHint: 'Pourcentage personnalisé. Utilisez un signe moins pour une baisse.',
+    moved: (n, a, da, b, db) => n + ' est passé de ' + a + ' (' + da + ') à ' + b + ' par tonne (' + db + ').',
+    fillIn: 'Indiquez vos achats annuels et un pourcentage.', noMove: 'Pas de variation de la matière première, donc pas d’effet sur vos coûts.',
+    up: (p, r) => 'Vos coûts pour ' + p + ' peuvent augmenter de ' + r + ' par an.', down: (p, r) => 'Vos coûts pour ' + p + ' peuvent baisser de ' + r + ' par an.',
+    to: ' à ', rGrond: 'Matière première ', rShare: 'Part de la matière première dans le prix de revient', rEffect: 'Effet attendu sur le prix du produit', rNow: 'Vos achats actuels', rAfter: 'Vos achats après répercussion',
+    note: 'Indication. La matière première représente environ 60 à 70 % du prix de revient des films et des sacs. Le reste correspond à la production, l’énergie, l’emballage et le transport. Une variation de la matière première se répercute généralement sur le prix d’achat avec quelques semaines de retard.',
+    view_: 'Voir ',
+    months: ['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'],
+    monthsLong: ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'],
+    desc: { LDPE: 'papier bulle, sacs d’expédition coex, sacs LDPE', LLDPE: 'film étirable', HDPE: 'sachets fins, sacs poubelles', PPROP: 'ruban adhésif, feuillard PP, sacs PP', PET: 'bouteilles, barquettes, feuillard PET', PVC: 'ruban PVC, film rétractable', PS: 'gobelets, mousse', ABS: 'pièces en plastique rigide' },
+    prod: { stretch: 'Film étirable (manuel et machine)', coex: 'Sacs d’expédition coex', nop: 'Papier bulle', ldpe: 'Sacs LDPE et sachets zip', hdpe: 'Sacs HDPE (sachets fins, sacs poubelles)' }
+  },
+  de: {
+    title: 'Rohstoffpreise Kunststoff', sub1: 'Wochenpreise pro Tonne. Letzte Notierung:', sub2: 'Jede Woche von unserem Einkauf aktualisiert.',
+    market: 'Markt', mDE: 'Europa (Deutschland)', mCN: 'Asien (China)', period: 'Zeitraum', r26: '6 Mon.', r52: '1 Jahr', r104: '2 Jahre', rall: 'Alles',
+    view: 'Ansicht', vprice: 'Preis pro Tonne', vindex: 'Index (Start = 100)',
+    unit: 'Marktnotierungen pro Tonne Rohstoff (Granulat), ohne Transport, Verarbeitung und MwSt. Dies sind keine Preise für Endprodukte.',
+    table: 'Zahlen als Tabelle anzeigen', perTon: 'pro Tonne', weekOf: 'Woche vom', usedFor: 'Verwendet für: ', w4: '4 Wochen', y1: '1 Jahr', na: 'k. A.',
+    ctitle: 'Was bedeutet ein Rohstoffanstieg für Ihren Einkauf?', csub: 'Wählen Sie Ihr Produkt und geben Sie Ihr Jahresvolumen ein. Das Ergebnis passt sich sofort an.',
+    cprod: 'Produkt', cspend: 'Ihr Einkauf pro Jahr (€, zzgl. MwSt.)', cper: 'Rohstoffentwicklung über', p13: 'die letzten 3 Monate', p26: 'die letzten 6 Monate', p52: 'das letzte Jahr', pcust: 'eigenen Prozentsatz eingeben',
+    cpct: 'Veränderung Rohstoff (%)', polyHint: (n) => 'Rohstoff: ' + n + ' (Notierung Europa)', custHint: 'Eigener Prozentsatz. Für einen Rückgang ein Minuszeichen verwenden.',
+    moved: (n, a, da, b, db) => n + ' ging von ' + a + ' (' + da + ') auf ' + b + ' pro Tonne (' + db + ').',
+    fillIn: 'Geben Sie Ihren Jahreseinkauf und einen Prozentsatz ein.', noMove: 'Keine Rohstoffbewegung, also keine Auswirkung auf Ihre Kosten.',
+    up: (p, r) => 'Ihre Kosten für ' + p + ' können um ' + r + ' pro Jahr steigen.', down: (p, r) => 'Ihre Kosten für ' + p + ' können um ' + r + ' pro Jahr sinken.',
+    to: ' bis ', rGrond: 'Rohstoff ', rShare: 'Anteil Rohstoff am Selbstkostenpreis', rEffect: 'Erwartete Wirkung auf den Produktpreis', rNow: 'Ihr Einkauf jetzt', rAfter: 'Ihr Einkauf nach Weitergabe',
+    note: 'Richtwert. Der Rohstoff macht etwa 60 bis 70 % des Selbstkostenpreises von Folien und Beuteln aus. Der Rest sind Produktion, Energie, Verpackung und Transport. Eine Rohstoffbewegung kommt meist mit einigen Wochen Verzögerung im Einkaufspreis an.',
+    view_: 'Zu ',
+    months: ['Jan.','Feb.','März','Apr.','Mai','Juni','Juli','Aug.','Sep.','Okt.','Nov.','Dez.'],
+    monthsLong: ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],
+    desc: { LDPE: 'Luftpolsterfolie, Coex-Versandtaschen, LDPE-Beutel', LLDPE: 'Stretchfolie', HDPE: 'dünne Beutel, Müllsäcke', PPROP: 'Klebeband, PP-Umreifungsband, PP-Beutel', PET: 'Flaschen, Schalen, PET-Band', PVC: 'PVC-Klebeband, Schrumpffolie', PS: 'Becher, Schaumstoff', ABS: 'Hartkunststoffteile' },
+    prod: { stretch: 'Stretchfolie (Hand- und Maschinenfolie)', coex: 'Coex-Versandtaschen', nop: 'Luftpolsterfolie', ldpe: 'LDPE-Beutel und Druckverschlussbeutel', hdpe: 'HDPE-Beutel (dünne Beutel, Müllsäcke)' }
+  }
 };
+const T = I18N[LANG];
+const URLS = {
+  nl:   { stretch: 'https://www.verpakkingenxl.nl/folie/stretchfolie/', coex: 'https://www.verpakkingenxl.nl/zakken/verzendzakken/coex-verzendzakken/', nop: 'https://www.verpakkingenxl.nl/inpakken-en-bescherming/noppenfolie/', ldpe: 'https://www.verpakkingenxl.nl/zakken/ldpe-zakken/', hdpe: 'https://www.verpakkingenxl.nl/hygiene/afvalbeheer/afvalzakken/' },
+  be:   { stretch: 'https://www.verpakkingenxl.be/nl/folie/stretchfolie/', coex: 'https://www.verpakkingenxl.be/nl/zakken/coex-verzendzakken/', nop: 'https://www.verpakkingenxl.be/nl/inpakken-en-bescherming/noppenfolie/', ldpe: 'https://www.verpakkingenxl.be/nl/zakken/ldpe-zakken/', hdpe: 'https://www.verpakkingenxl.be/nl/hygiene/afvalbeheer/afvalzakken/' },
+  befr: { stretch: 'https://www.verpakkingenxl.be/fr/film-demballage/film-etirable/', coex: 'https://www.verpakkingenxl.be/fr/sacs/sacs-dexpedition-coex/', nop: 'https://www.verpakkingenxl.be/fr/emballage-et-protection/papier-bulle/', ldpe: 'https://www.verpakkingenxl.be/fr/sacs/sacs-ldpe/', hdpe: 'https://www.verpakkingenxl.be/fr/hygiene/gestion-des-dechets/sacs-poubelles/' },
+  de:   { stretch: 'https://www.verpackungenxl.de/folie/stretchfolie/', coex: 'https://www.verpackungenxl.de/beutel-taschen/coex-versandtaschen/', nop: 'https://www.verpackungenxl.de/verpackung-und-schutz/luftpolsterfolie/', ldpe: 'https://www.verpackungenxl.de/beutel-taschen/ldpe-beutel/', hdpe: 'https://www.verpackungenxl.de/hygiene/abfallmanagement/muellsaecke/' }
+}[SHOP];
+const COLORS = { LDPE: '#0b99bc', LLDPE: '#eb6834', HDPE: '#6250d6', PPROP: '#eda100', PET: '#e87ba4', PVC: '#008300', PS: '#1c5cab', ABS: '#e34948' };
+const NAMES = { LDPE: 'LDPE', LLDPE: 'LLDPE', HDPE: 'HDPE', PPROP: 'PP', PET: 'PET', PVC: 'PVC', PS: 'PS', ABS: 'ABS' };
+const POLY = {}; Object.keys(COLORS).forEach(k => POLY[k] = { name: NAMES[k], color: COLORS[k], desc: T.desc[k] });
 const ORDER = ['LDPE','LLDPE','HDPE','PPROP','PET','PVC','PS','ABS'];
-const MARKET = { DE: 'Europa (Duitsland)', CN: 'Azië (China)' };
-const MONTHS = ['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
-const nf = new Intl.NumberFormat('nl-NL');
-const nf1 = new Intl.NumberFormat('nl-NL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-const eur = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+const MARKET = { DE: T.mDE, CN: T.mCN };
+const MONTHS = T.months;
+const nf = new Intl.NumberFormat(LOCALE);
+const nf1 = new Intl.NumberFormat(LOCALE, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const eur = new Intl.NumberFormat(LOCALE, { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+document.querySelectorAll('[data-t]').forEach(el => { el.textContent = T[el.dataset.t]; });
+document.title = T.title + ' | ' + (SHOP === 'de' ? 'VerpackungenXL' : 'VerpakkingenXL');
 
 function fmtDate(iso, long) {
   const [y, m, d] = iso.split('-').map(Number);
-  return long ? d + ' ' + ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'][m-1] + ' ' + y
-              : d + ' ' + MONTHS[m-1] + ' ' + y;
+  const dd = LANG === 'de' ? d + '.' : d;
+  return long ? dd + ' ' + T.monthsLong[m-1] + ' ' + y
+              : dd + ' ' + MONTHS[m-1] + ' ' + y;
 }
 function pct(a, b) { return (a == null || b == null || !b) ? null : (a / b - 1) * 100; }
-function signPct(v) { return v == null ? 'n.b.' : (v > 0 ? '+' : '') + nf1.format(v) + '%'; }
+function signPct(v) { return v == null ? T.na : (v > 0 ? '+' : '') + nf1.format(v) + '%'; }
 function lastIdx(arr) { for (let i = arr.length - 1; i >= 0; i--) if (arr[i] != null) return i; return -1; }
 
-const params = new URLSearchParams(location.search);
 const VIEW = params.get('view') === 'calculator' ? 'calc' : 'grafiek';
 document.getElementById('viewGrafiek').hidden = VIEW !== 'grafiek';
 document.getElementById('viewCalc').hidden = VIEW !== 'calc';
@@ -222,7 +306,7 @@ function buildChips() {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'chip'; b.dataset.p = p;
     b.setAttribute('aria-pressed', state.on.has(p) ? 'true' : 'false');
-    b.title = 'Gebruikt voor: ' + POLY[p].desc;
+    b.title = T.usedFor + POLY[p].desc;
     b.innerHTML = '<span class="dot" style="background:' + POLY[p].color + '"></span>' + POLY[p].name;
     b.addEventListener('click', () => {
       if (state.on.has(p)) { if (state.on.size > 1) state.on.delete(p); } else state.on.add(p);
@@ -251,8 +335,8 @@ function renderTiles() {
     const el = document.createElement('div');
     el.className = 'tile'; el.style.borderLeftColor = POLY[p].color;
     el.innerHTML = '<div class="n"><span class="dot" style="display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;background:' + POLY[p].color + '"></span>' + POLY[p].name + (window.innerWidth > 560 ? ' · ' + MARKET[state.market] : '') + '</div>' +
-      '<div class="v">' + nf.format(s[i]) + ' <small>per ton</small></div>' +
-      '<div class="d">4 weken: <span class="' + cls(d4) + '">' + signPct(d4) + '</span> · 1 jaar: <span class="' + cls(d52) + '">' + signPct(d52) + '</span></div>';
+      '<div class="v">' + nf.format(s[i]) + ' <small>' + T.perTon + '</small></div>' +
+      '<div class="d">' + T.w4 + ': <span class="' + cls(d4) + '">' + signPct(d4) + '</span> · ' + T.y1 + ': <span class="' + cls(d52) + '">' + signPct(d52) + '</span></div>';
     t.appendChild(el);
   });
 }
@@ -343,7 +427,7 @@ function showTip(i, r) {
   });
   svg.querySelector('#dots').innerHTML = dots;
   const tip = document.getElementById('tip');
-  tip.innerHTML = '<div class="t">Week van ' + fmtDate(dates[i]) + '</div>' + rows + (state.mode === 'index' ? '' : '<div class="note" style="margin-top:4px">per ton</div>');
+  tip.innerHTML = '<div class="t">' + T.weekOf + ' ' + fmtDate(dates[i]) + '</div>' + rows + (state.mode === 'index' ? '' : '<div class="note" style="margin-top:4px">' + T.perTon + '</div>');
   tip.style.display = 'block';
   const scale = r.width / W;
   let left = x(i) * scale + 14;
@@ -371,7 +455,7 @@ function niceStep(raw) {
 function renderTable() {
   const m = DATA.markets[state.market];
   const keys = ORDER.filter(p => state.on.has(p));
-  let h = '<thead><tr><th>Week van</th>' + keys.map(p => '<th>' + POLY[p].name + '</th>').join('') + '</tr></thead><tbody>';
+  let h = '<thead><tr><th>' + T.weekOf + '</th>' + keys.map(p => '<th>' + POLY[p].name + '</th>').join('') + '</tr></thead><tbody>';
   for (let i = m.dates.length - 1; i >= Math.max(0, m.dates.length - 26); i--) {
     h += '<tr><td>' + fmtDate(m.dates[i]) + '</td>' + keys.map(p => '<td>' + (m.series[p][i] == null ? '–' : nf.format(m.series[p][i])) + '</td>').join('') + '</tr>';
   }
@@ -382,11 +466,12 @@ function render() { renderTiles(); renderChart(); renderTable(); }
 
 if (VIEW === 'grafiek') {
   document.getElementById('lastDate').textContent = fmtDate(DATA.updated, true);
-  if (UPDATE && UPDATE.text) {
+  const UPD = UPDATE && (UPDATE[LANG] || (UPDATE.text ? UPDATE : null));
+  if (UPD && UPD.text) {
     document.getElementById('updateBox').hidden = false;
-    document.getElementById('updateTitle').textContent = UPDATE.title;
-    document.getElementById('updateText').textContent = UPDATE.text;
-    document.getElementById('updateBy').textContent = UPDATE.by + ' · ' + fmtDate(UPDATE.date, true);
+    document.getElementById('updateTitle').textContent = UPD.title;
+    document.getElementById('updateText').textContent = UPD.text;
+    document.getElementById('updateBy').textContent = UPD.by + ' · ' + fmtDate(UPD.date, true);
   }
   setupSeg('segMarket', 'market'); setupSeg('segRange', 'range'); setupSeg('segMode', 'mode');
   buildChips(); render();
@@ -395,12 +480,8 @@ if (VIEW === 'grafiek') {
 
 /* ---------- CALCULATOR ---------- */
 const PRODUCTS = [
-  { id: 'stretch', name: 'Stretchfolie (hand- en machinefolie)', poly: 'LLDPE', url: 'https://www.verpakkingenxl.nl/folie/stretchfolie/' },
-  { id: 'coex', name: 'Coex verzendzakken', poly: 'LDPE', url: 'https://www.verpakkingenxl.nl/zakken/verzendzakken/coex-verzendzakken/' },
-  { id: 'nop', name: 'Noppenfolie', poly: 'LDPE', url: 'https://www.verpakkingenxl.nl/inpakken-en-bescherming/noppenfolie/' },
-  { id: 'ldpe', name: 'LDPE-zakken en gripzakjes', poly: 'LDPE', url: 'https://www.verpakkingenxl.nl/zakken/ldpe-zakken/' },
-  { id: 'hdpe', name: 'HDPE-zakken (dunne zakjes, afvalzakken)', poly: 'HDPE', url: 'https://www.verpakkingenxl.nl/hygiene/afvalbeheer/afvalzakken/' }
-];
+  { id: 'stretch', poly: 'LLDPE' }, { id: 'coex', poly: 'LDPE' }, { id: 'nop', poly: 'LDPE' }, { id: 'ldpe', poly: 'LDPE' }, { id: 'hdpe', poly: 'HDPE' }
+].map(p => Object.assign(p, { name: T.prod[p.id], url: URLS[p.id] }));
 const SHARE_LO = 0.60, SHARE_HI = 0.70;
 
 function calcSetup() {
@@ -408,45 +489,44 @@ function calcSetup() {
   PRODUCTS.forEach(p => { const o = document.createElement('option'); o.value = p.id; o.textContent = p.name; sel.appendChild(o); });
   const pr = params.get('product'); if (pr && PRODUCTS.some(p => p.id === pr)) sel.value = pr;
   ['cProduct','cPeriod'].forEach(id => document.getElementById(id).addEventListener('change', fillPct));
-  document.getElementById('cPct').addEventListener('input', () => { document.getElementById('cPeriod').value = 'custom'; document.getElementById('cPctHint').textContent = 'Eigen percentage. Gebruik een minteken voor een daling.'; });
+  document.getElementById('cPct').addEventListener('input', () => { document.getElementById('cPeriod').value = 'custom'; document.getElementById('cPctHint').textContent = T.custHint; });
   ['cProduct','cPeriod','cSpend','cPct'].forEach(id => { const el = document.getElementById(id); el.addEventListener('input', calc); el.addEventListener('change', calc); });
   fillPct(); calc();
 }
 function product() { return PRODUCTS.find(p => p.id === document.getElementById('cProduct').value); }
 function fillPct() {
   const p = product();
-  document.getElementById('cPolyHint').textContent = 'Grondstof: ' + POLY[p.poly].name + ' (notering Europa)';
+  document.getElementById('cPolyHint').textContent = T.polyHint(POLY[p.poly].name);
   const per = document.getElementById('cPeriod').value;
   const hint = document.getElementById('cPctHint');
-  if (per === 'custom') { hint.textContent = 'Eigen percentage. Gebruik een minteken voor een daling.'; return; }
+  if (per === 'custom') { hint.textContent = T.custHint; return; }
   const s = DATA.markets.DE.series[p.poly]; const d = DATA.markets.DE.dates;
   const i = lastIdx(s); const j = Math.max(0, i - Number(per));
   const v = pct(s[i], s[j]);
   document.getElementById('cPct').value = v == null ? '' : v.toFixed(1);
-  hint.textContent = POLY[p.poly].name + ' ging van ' + nf.format(s[j]) + ' (' + fmtDate(d[j]) + ') naar ' + nf.format(s[i]) + ' per ton (' + fmtDate(d[i]) + ').';
+  hint.textContent = T.moved(POLY[p.poly].name, nf.format(s[j]), fmtDate(d[j]), nf.format(s[i]), fmtDate(d[i]));
 }
 function calc() {
   const p = product();
   const spend = parseFloat(String(document.getElementById('cSpend').value).replace(',', '.'));
   const g = parseFloat(String(document.getElementById('cPct').value).replace(',', '.'));
   const out = document.getElementById('out');
-  if (!(spend > 0) || isNaN(g)) { out.innerHTML = '<div class="verdict" style="background:#fff6e5;border-left-color:#d98a00">Vul je inkoop per jaar en een percentage in.</div>'; return; }
+  if (!(spend > 0) || isNaN(g)) { out.innerHTML = '<div class="verdict" style="background:#fff6e5;border-left-color:#d98a00">' + T.fillIn + '</div>'; return; }
   const lo = spend * g / 100 * SHARE_LO, hi = spend * g / 100 * SHARE_HI;
   const pLo = g * SHARE_LO, pHi = g * SHARE_HI;
   const rising = g >= 0;
-  const range = (a, b) => eur.format(Math.abs(Math.min(a, b))) + ' tot ' + eur.format(Math.abs(Math.max(a, b)));
-  const verdict = g === 0 ? 'Geen grondstofbeweging, dus geen effect op je kosten vanuit de grondstof.'
-    : (rising ? 'Je kosten voor ' + p.name.toLowerCase() + ' kunnen met ' + range(lo, hi) + ' per jaar stijgen.'
-              : 'Je kosten voor ' + p.name.toLowerCase() + ' kunnen met ' + range(lo, hi) + ' per jaar dalen.');
+  const range = (a, b) => eur.format(Math.abs(Math.min(a, b))) + T.to + eur.format(Math.abs(Math.max(a, b)));
+  const verdict = g === 0 ? T.noMove
+    : (rising ? T.up(LANG === 'de' ? p.name : p.name.toLowerCase(), range(lo, hi)) : T.down(LANG === 'de' ? p.name : p.name.toLowerCase(), range(lo, hi)));
   out.innerHTML = '<div class="verdict">' + verdict + '</div>' +
     '<div class="rows">' +
-      '<div class="row"><span>Grondstof ' + POLY[p.poly].name + '</span><span>' + signPct(g) + '</span></div>' +
-      '<div class="row"><span>Aandeel grondstof in de kostprijs</span><span>60 tot 70%</span></div>' +
-      '<div class="row"><span>Verwacht effect op de productprijs</span><span>' + signPct(Math.min(pLo, pHi)).replace('%','') + ' tot ' + signPct(Math.max(pLo, pHi)) + '</span></div>' +
-      '<div class="row"><span>Jouw inkoop nu</span><span>' + eur.format(spend) + '</span></div>' +
-      '<div class="row"><span>Jouw inkoop na doorrekening</span><span>' + eur.format(spend + Math.min(lo, hi)) + ' tot ' + eur.format(spend + Math.max(lo, hi)) + '</span></div>' +
+      '<div class="row"><span>' + T.rGrond + POLY[p.poly].name + '</span><span>' + signPct(g) + '</span></div>' +
+      '<div class="row"><span>' + T.rShare + '</span><span>60' + T.to + '70%</span></div>' +
+      '<div class="row"><span>' + T.rEffect + '</span><span>' + signPct(Math.min(pLo, pHi)).replace('%','') + T.to + signPct(Math.max(pLo, pHi)) + '</span></div>' +
+      '<div class="row"><span>' + T.rNow + '</span><span>' + eur.format(spend) + '</span></div>' +
+      '<div class="row"><span>' + T.rAfter + '</span><span>' + eur.format(spend + Math.min(lo, hi)) + T.to + eur.format(spend + Math.max(lo, hi)) + '</span></div>' +
     '</div>' +
-    '<p class="note">Indicatie. Grondstof is ongeveer 60 tot 70% van de kostprijs van folie en zakken. De rest is productie, energie, verpakking en transport. Een beweging in de grondstof komt meestal met enkele weken vertraging in de inkoopprijs terecht. <a href="' + p.url + '" target="_top" style="color:#0b99bc;font-weight:600">Bekijk ' + p.name.toLowerCase() + ' →</a></p>';
+    '<p class="note">' + T.note + ' <a href="' + p.url + '" target="_top" style="color:#0b99bc;font-weight:600">' + T.view_ + (LANG === 'de' ? p.name : p.name.toLowerCase()) + ' →</a></p>';
 }
 if (VIEW === 'calc') calcSetup();
 </script>
