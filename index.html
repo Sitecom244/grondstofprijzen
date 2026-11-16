@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grondstofprijzen kunststof: LDPE, HDPE en LLDPE | VerpakkingenXL</title>
+<meta name="robots" content="noindex">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: "Open Sans", Arial, Helvetica, sans-serif; color: #333; margin: 0; padding: 16px; background: #fff; line-height: 1.5; font-size: 15px; }
+  h2 { margin: 0 0 4px; font-size: 20px; color: #0b99bc; font-weight: 700; }
+  .sub { margin: 0 0 14px; color: #666; font-size: 14px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: flex-end; margin-bottom: 12px; }
+  .ctrl label, .ctrl .lbl { display: block; font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+  .seg { display: inline-flex; border: 1px solid #ccc; border-radius: 5px; overflow: hidden; }
+  .seg button { border: 0; background: #fff; padding: 7px 12px; font: inherit; font-size: 14px; cursor: pointer; color: #333; }
+  .seg button + button { border-left: 1px solid #ccc; }
+  .seg button[aria-pressed="true"] { background: #0b99bc; color: #fff; font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #ccc; border-radius: 999px; background: #fff; padding: 5px 11px; font: inherit; font-size: 13px; cursor: pointer; color: #333; }
+  .chip .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .chip[aria-pressed="false"] { color: #888; background: #f6f6f6; }
+  .chip[aria-pressed="false"] .dot { opacity: .25; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-bottom: 12px; }
+  .tile { background: #f9f9f9; border-radius: 5px; padding: 10px 12px; border-left: 4px solid #0b99bc; }
+  .tile .n { font-size: 13px; font-weight: 600; color: #555; }
+  .tile .v { font-size: 22px; font-weight: 700; color: #222; }
+  .tile .v small { font-size: 13px; font-weight: 400; color: #666; }
+  .tile .d { font-size: 13px; color: #555; }
+  .up { color: #b45309; } .down { color: #0b7a96; }
+  .chartwrap { position: relative; }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .grid line { stroke: #e9e9e9; }
+  .axis text { fill: #777; font-size: 11px; }
+  .tip { position: absolute; pointer-events: none; background: #fff; border: 1px solid #ddd; border-radius: 5px; box-shadow: 0 2px 8px rgba(0,0,0,.08); padding: 8px 10px; font-size: 13px; display: none; min-width: 150px; z-index: 2; }
+  .tip .t { font-weight: 700; margin-bottom: 4px; }
+  .tip .r { display: flex; justify-content: space-between; gap: 12px; }
+  .tip .r span:first-child { display: inline-flex; align-items: center; gap: 6px; }
+  .tip .sw { width: 10px; height: 3px; border-radius: 2px; display: inline-block; }
+  .note { font-size: 12.5px; color: #666; margin: 8px 0 0; }
+  details { margin-top: 10px; font-size: 14px; }
+  summary { cursor: pointer; color: #0b99bc; font-weight: 600; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; margin-top: 8px; }
+  th, td { padding: 6px 8px; border-bottom: 1px solid #e6e6e6; text-align: right; white-space: nowrap; }
+  th:first-child, td:first-child { text-align: left; }
+  .tablewrap { overflow-x: auto; }
+  .update { background: #eaf7fa; border-left: 5px solid #0b99bc; border-radius: 5px; padding: 12px 15px; margin-bottom: 14px; }
+  .update .h { font-weight: 700; margin-bottom: 4px; }
+  .update .by { font-size: 13px; color: #555; margin-top: 6px; }
+  /* calculator */
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+  .grid2 label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 4px; }
+  input, select { width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit; background: #fff; }
+  input:focus, select:focus { outline: 2px solid #0b99bc; border-color: #0b99bc; }
+  .hint { font-size: 12.5px; color: #777; margin-top: 3px; }
+  .btn { margin-top: 14px; width: 100%; padding: 12px; font-size: 16px; font-weight: 700; color: #fff; background: #0b99bc; border: 0; border-radius: 5px; cursor: pointer; font-family: inherit; }
+  .btn:hover { background: #09829f; }
+  #out { margin-top: 16px; }
+  .calcwrap { display: grid; grid-template-columns: minmax(0,1fr); gap: 20px; }
+  .calcwrap .grid2 { grid-template-columns: minmax(0,1fr); }
+  @media (min-width: 700px) { .calcwrap { grid-template-columns: minmax(0,1fr) minmax(0,1fr); } #out { margin-top: 0; } }
+  .verdict { padding: 12px 15px; border-radius: 5px; font-weight: 700; font-size: 16px; margin-bottom: 12px; background: #eaf7fa; border-left: 5px solid #0b99bc; }
+  .rows { background: #f9f9f9; border-radius: 5px; padding: 6px 15px; }
+  .row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid #e6e6e6; }
+  .row:last-child { border-bottom: 0; }
+  .row span:last-child { font-weight: 700; text-align: right; white-space: nowrap; }
+  [hidden] { display: none !important; }
+  @media (max-width: 560px) {
+    body { padding: 12px; }
+    .controls { gap: 8px; }
+    .ctrl .lbl { display: none; }
+    .seg button { padding: 7px 9px; font-size: 13px; }
+    .tiles { grid-template-columns: 1fr; gap: 0; background: #f9f9f9; border-radius: 5px; padding: 4px 10px; }
+    .tile { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; align-items: baseline; background: none; border-left: 0; border-bottom: 1px solid #e6e6e6; border-radius: 0; padding: 7px 0; }
+    .tile:last-child { border-bottom: 0; }
+    .tile .n { grid-column: 1; }
+    .tile .v { grid-column: 2; font-size: 17px; text-align: right; }
+    .tile .d { grid-column: 1 / 3; font-size: 12.5px; }
+    .update { padding: 10px 12px; font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== GRAFIEK ===================== -->
+<section id="viewGrafiek">
+  <h2>Grondstofprijzen kunststof</h2>
+  <p class="sub">Weekprijzen per ton. Laatste notering: <strong id="lastDate"></strong>. Wekelijks bijgehouden door onze inkoop.</p>
+
+  <div class="update" id="updateBox" hidden>
+    <div class="h" id="updateTitle"></div>
+    <div id="updateText"></div>
+    <div class="by" id="updateBy"></div>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl"><span class="lbl">Markt</span>
+      <div class="seg" id="segMarket" role="group" aria-label="Markt">
+        <button type="button" data-v="DE" aria-pressed="true">Europa (Duitsland)</button>
+        <button type="button" data-v="CN" aria-pressed="false">Azië (China)</button>
+      </div>
+    </div>
+    <div class="ctrl"><span class="lbl">Periode</span>
+      <div class="seg" id="segRange" role="group" aria-label="Periode">
+        <button type="button" data-v="26" aria-pressed="false">6 mnd</button>
+        <button type="button" data-v="52" aria-pressed="true">1 jaar</button>
+        <button type="button" data-v="104" aria-pressed="false">2 jaar</button>
+        <button type="button" data-v="all" aria-pressed="false">Alles</button>
+      </div>
+    </div>
+    <div class="ctrl"><span class="lbl">Weergave</span>
+      <div class="seg" id="segMode" role="group" aria-label="Weergave">
+        <button type="button" data-v="price" aria-pressed="true">Prijs per ton</button>
+        <button type="button" data-v="index" aria-pressed="false">Index (start = 100)</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chips" id="chips" role="group" aria-label="Grondstoffen"></div>
+  <div class="tiles" id="tiles"></div>
+
+  <div class="chartwrap" id="chartwrap">
+    <svg id="chart" role="img" aria-label="Lijngrafiek met weekprijzen van kunststof grondstoffen"></svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <p class="note" id="unitNote">Marktnoteringen per ton grondstof (korrel), exclusief transport, verwerking en btw. Dit zijn geen prijzen van eindproducten.</p>
+
+  <details>
+    <summary>Bekijk de cijfers als tabel</summary>
+    <div class="tablewrap"><table id="table"></table></div>
+  </details>
+</section>
+
+<!-- ===================== CALCULATOR ===================== -->
+<section id="viewCalc" hidden>
+  <h2>Wat betekent een grondstofstijging voor jouw inkoop?</h2>
+  <p class="sub">Kies je product en vul in wat je er per jaar aan uitgeeft. De uitkomst verandert direct mee.</p>
+  <div class="calcwrap"><div>
+  <div class="grid2">
+    <div><label for="cProduct">Product</label>
+      <select id="cProduct"></select>
+      <div class="hint" id="cPolyHint"></div>
+    </div>
+    <div><label for="cSpend">Jouw inkoop per jaar (€, excl. btw)</label>
+      <input type="number" inputmode="decimal" id="cSpend" value="5000" min="0">
+    </div>
+    <div><label for="cPeriod">Grondstofbeweging over</label>
+      <select id="cPeriod">
+        <option value="13">de afgelopen 3 maanden</option>
+        <option value="26">de afgelopen 6 maanden</option>
+        <option value="52" selected>het afgelopen jaar</option>
+        <option value="custom">eigen percentage invullen</option>
+      </select>
+    </div>
+    <div><label for="cPct">Verandering grondstof (%)</label>
+      <input type="number" inputmode="decimal" id="cPct" step="0.1">
+      <div class="hint" id="cPctHint"></div>
+    </div>
+  </div>
+  </div>
+  <div id="out" aria-live="polite"></div></div>
+</section>
+
+<script>
+const DATA = {"updated":"2026-08-31","markets":{"DE":{"dates":["2024-01-01","2024-01-08","2024-01-15","2024-01-22","2024-01-29","2024-02-05","2024-02-12","2024-02-19","2024-02-26","2024-03-04","2024-03-11","2024-03-18","2024-03-25","2024-04-01","2024-04-08","2024-04-15","2024-04-22","2024-04-29","2024-05-06","2024-05-13","2024-05-20","2024-05-27","2024-06-03","2024-06-10","2024-06-17","2024-06-24","2024-07-01","2024-07-08","2024-07-15","2024-07-22","2024-07-29","2024-08-05","2024-08-12","2024-08-19","2024-08-26","2024-09-02","2024-09-09","2024-09-16","2024-09-23","2024-09-30","2024-10-07","2024-10-14","2024-10-21","2024-10-28","2024-11-04","2024-11-11","2024-11-18","2024-11-25","2024-12-02","2024-12-09","2024-12-16","2024-12-23","2024-12-30","2025-01-06","2025-01-13","2025-01-20","2025-01-27","2025-02-03","2025-02-10","2025-02-17","2025-02-24","2025-03-03","2025-03-10","2025-03-17","2025-03-24","2025-03-31","2025-04-07","2025-04-14","2025-04-21","2025-04-28","2025-05-05","2025-05-12","2025-05-19","2025-05-26","2025-06-02","2025-06-09","2025-06-16","2025-06-23","2025-06-30","2025-07-07","2025-07-14","2025-07-21","2025-07-28","2025-08-04","2025-08-11","2025-08-18","2025-08-25","2025-09-01","2025-09-08","2025-09-15","2025-09-22","2025-09-29","2025-10-06","2025-10-13","2025-10-20","2025-10-27","2025-11-03","2025-11-10","2025-11-17","2025-11-24","2025-12-01","2025-12-08","2025-12-15","2025-12-22","2025-12-29","2026-01-05","2026-01-12","2026-01-19","2026-01-26","2026-02-02","2026-02-09","2026-02-16","2026-02-23","2026-03-02","2026-03-09","2026-03-16","2026-03-23","2026-03-30","2026-04-06","2026-04-13","2026-04-20","2026-04-27","2026-05-04","2026-05-11","2026-05-18","2026-05-25","2026-06-01","2026-06-08","2026-06-15","2026-06-22","2026-06-29","2026-07-06","2026-07-13","2026-07-20","2026-07-27","2026-08-03","2026-08-10","2026-08-17","2026-08-24","2026-08-31"],"series":{"LDPE":[1648,1648,1648,1648,1648,1648,1653,1653,1718,1768,1788,1788,1848,1858,1858,1858,1858,1858,1858,1848,1848,1828,1828,1813,1808,1798,1798,1798,1798,1798,1798,1798,1808,1808,1808,1818,1818,1818,1818,1838,1838,1838,1818,1818,1818,1818,1818,1818,1818,1818,1818,1818,1818,1818,1818,1823,1828,1838,1838,1878,1918,1938,1938,1948,1958,1968,1968,1968,1968,1968,1968,1948,1938,1898,1898,1898,1898,1898,1898,1898,1898,1898,1898,1898,1898,1898,1898,1898,1898,1898,1878,1878,1878,1878,1878,1858,1848,1848,1838,1833,1823,1823,1823,1833,1843,1843,1843,1843,1853,1873,1873,1878,1888,1903,1913,2023,2188,2303,2353,2753,2778,2953,2953,2993,3013,3033,3053,3043,2953,2903,2788,2738,2588,2588,2538,2488,2488,2488,2488,2528],"LLDPE":[1483,1483,1483,1483,1483,1483,1488,1488,1553,1583,1603,1603,1643,1653,1653,1653,1653,1653,1653,1643,1643,1613,1613,1598,1583,1583,1583,1583,1583,1583,1583,1583,1593,1593,1593,1613,1613,1613,1613,1613,1613,1613,1593,1593,1593,1593,1593,1593,1593,1593,1593,1593,1593,1593,1593,1598,1603,1603,1603,1633,1663,1683,1683,1683,1683,1693,1693,1693,1693,1693,1693,1673,1663,1623,1623,1623,1623,1623,1623,1623,1623,1623,1623,1623,1623,1623,1623,1623,1623,1623,1603,1603,1603,1603,1603,1583,1573,1573,1563,1558,1548,1548,1548,1548,1548,1548,1548,1548,1548,1553,1553,1553,1558,1573,1583,1673,1843,1963,2013,2413,2438,2583,2583,2613,2633,2663,2683,2673,2583,2533,2443,2393,2243,2243,2168,2143,2143,2143,2143,2163],"HDPE":[1378,1378,1378,1378,1378,1378,1383,1383,1428,1448,1468,1468,1508,1508,1508,1508,1508,1508,1508,1498,1498,1488,1488,1473,1468,1458,1458,1458,1458,1458,1458,1458,1468,1468,1468,1468,1468,1468,1468,1468,1468,1468,1468,1448,1448,1448,1448,1448,1448,1448,1448,1448,1448,1448,1448,1453,1458,1468,1468,1498,1518,1538,1538,1538,1548,1558,1558,1558,1558,1558,1558,1538,1528,1488,1488,1488,1488,1488,1488,1488,1488,1488,1488,1488,1488,1488,1488,1488,1488,1488,1468,1468,1468,1468,1468,1448,1448,1448,1438,1423,1423,1423,1423,1423,1423,1423,1423,1423,1423,1423,1423,1423,1428,1438,1448,1548,1678,1828,1878,2278,2303,2428,2428,2458,2478,2508,2528,2518,2428,2378,2328,2278,2128,2128,2018,2018,2018,2018,2018,2038],"PPROP":[1278,1278,1278,1278,1308,1338,1353,1408,1438,1438,1468,1473,1508,1508,1508,1528,1528,1528,1528,1518,1518,1513,1508,1478,1478,1478,1468,1468,1468,1478,1478,1478,1488,1488,1488,1508,1508,1498,1498,1488,1488,1488,1448,1448,1448,1448,1448,1448,1448,1448,1448,1448,1448,1448,1448,1458,1458,1458,1458,1488,1518,1518,1518,1518,1518,1518,1508,1488,1488,1478,1433,1433,1393,1378,1378,1378,1378,1378,1368,1368,1368,1368,1358,1358,1358,1348,1348,1338,1338,1338,1328,1318,1318,1318,1318,1298,1298,1293,1288,1273,1273,1273,1273,1273,1273,1273,1273,1273,1273,1273,1273,1273,1278,1288,1298,1323,1423,1678,1678,1818,2168,2298,2298,2338,2368,2368,2368,2358,2318,2268,2168,2128,2018,1968,1918,1918,1918,1918,1918,1938],"PET":[1126,1126,1126,1126,1169,1223,1223,1223,1223,1223,1223,1223,1223,1223,1223,1223,1223,1212,1212,1201,1201,1201,1179,1168,1168,1168,1168,1168,1211,1211,1211,1211,1211,1222,1222,1222,1222,1222,1222,1179,1179,1179,1168,1152,1147,1147,1147,1147,1158,1158,1136,1136,1136,1136,1136,1125,1125,1093,1093,1093,1115,1115,1115,1115,1115,1131,1131,1131,1082,1071,1060,1060,1060,1060,1038,1038,1027,1005,1005,1005,1005,994,994,983,983,983,983,983,983,983,983,972,951,951,951,929,929,929,929,929,929,929,929,940,940,940,940,873,883,883,883,883,883,883,893,893,1083,1383,1383,1383,1433,1433,1473,1473,1473,1483,1483,1483,1483,1453,1383,1343,1343,1283,1283,1238,1238,1238,1238,1238],"PVC":[1018,1018,1018,988,988,988,988,988,988,988,988,998,1003,1003,1003,1003,1003,1018,1013,1013,1008,1008,1008,998,978,948,923,923,933,933,933,933,933,933,938,938,938,928,948,953,963,953,953,948,948,948,948,948,953,953,938,938,938,938,938,938,938,938,938,938,948,948,948,948,948,963,963,958,953,953,953,943,943,933,928,928,928,928,928,928,928,928,928,928,923,923,923,923,923,923,923,923,923,923,923,923,923,913,908,908,908,908,908,908,908,908,908,873,868,868,868,868,868,868,888,898,918,928,978,1028,1173,1228,1228,1248,1248,1258,1258,1233,1218,1208,null,1183,1108,1008,1008,1008,1008,1008,1008,1008],"PS":[1630,1630,1630,1625,1625,1625,1725,1725,1725,1725,1750,1800,1860,1860,1860,1880,1880,1900,1900,1850,1815,1800,1800,1795,1780,1780,1770,1665,1665,1645,1645,1645,1680,1725,1725,1725,1725,1725,1725,1725,1675,1520,1520,1520,1520,1520,1520,1520,1520,1520,1520,1520,1520,1520,1530,1550,1555,1555,1580,1590,1590,1610,1630,1630,1650,1670,1650,1620,1612,1612,1612,1587,1572,1572,1572,1540,1530,1530,1525,1475,1465,1465,1455,1455,1440,1440,1420,1420,1390,1385,1375,1375,1375,1345,1335,1335,1325,1325,1315,1305,1305,1310,1325,1325,1325,1325,1330,1345,1345,1345,1365,1365,1435,1465,1480,1535,1715,1715,1730,1880,2025,2180,2195,2210,2230,2250,2250,2250,2245,2245,2220,2200,1950,1950,1920,1920,1930,2020,2060,2060],"ABS":[1948,1948,1948,1948,1948,1948,1948,1973,2023,2048,2073,2073,2173,2173,2173,2173,2193,2223,2223,2223,2173,2173,2173,2173,2138,2138,2138,2098,2098,2098,2098,2098,2153,2153,2153,2173,2173,2173,2173,2123,2113,2113,2073,2063,2063,2063,2063,2063,2073,2073,2073,2068,2068,2068,2068,2083,2083,2083,2083,2103,2123,2123,2123,2123,2123,2133,2133,2078,2073,2073,2073,2073,2023,2023,2023,2023,1983,1973,1973,1973,1933,1933,1933,1933,1933,1933,1913,1913,1889,1889,1889,1883,1883,1873,1873,1853,1843,1843,1833,1823,1823,1823,1823,1823,1833,1833,1833,1833,1833,1833,1853,1863,1883,1903,1913,1913,1913,1973,1973,1998,2273,2443,2443,2443,2493,2533,2543,2543,2523,2513,2513,2513,2263,2223,2223,2223,2223,2223,2323,2323]}},"CN":{"dates":["2024-01-01","2024-01-08","2024-01-15","2024-01-22","2024-01-29","2024-02-05","2024-02-12","2024-02-19","2024-02-26","2024-03-04","2024-03-11","2024-03-18","2024-03-25","2024-04-01","2024-04-08","2024-04-15","2024-04-22","2024-04-29","2024-05-06","2024-05-13","2024-05-20","2024-05-27","2024-06-03","2024-06-10","2024-06-17","2024-06-24","2024-07-01","2024-07-08","2024-07-15","2024-07-22","2024-07-29","2024-08-05","2024-08-12","2024-08-19","2024-08-26","2024-09-02","2024-09-09","2024-09-16","2024-09-23","2024-09-30","2024-10-07","2024-10-14","2024-10-21","2024-10-28","2024-11-04","2024-11-11","2024-11-18","2024-11-25","2024-12-02","2024-12-09","2024-12-16","2024-12-23","2024-12-30","2025-01-06","2025-01-13","2025-01-20","2025-01-27","2025-02-03","2025-02-10","2025-02-17","2025-02-24","2025-03-03","2025-03-10","2025-03-17","2025-03-24","2025-03-31","2025-04-07","2025-04-14","2025-04-21","2025-04-28","2025-05-05","2025-05-12","2025-05-19","2025-05-26","2025-06-02","2025-06-09","2025-06-16","2025-06-23","2025-06-30","2025-07-07","2025-07-14","2025-07-21","2025-07-28","2025-08-04","2025-08-11","2025-08-18","2025-08-25","2025-09-01","2025-09-08","2025-09-15","2025-09-22","2025-09-29","2025-10-06","2025-10-13","2025-10-20","2025-10-27","2025-11-03","2025-11-10","2025-11-17","2025-11-24","2025-12-01","2025-12-08","2025-12-15","2025-12-22","2025-12-29","2026-01-05","2026-01-12","2026-01-19","2026-01-26","2026-02-02","2026-02-09","2026-02-16","2026-02-23","2026-03-02","2026-03-09","2026-03-16","2026-03-23","2026-03-30","2026-04-06","2026-04-13","2026-04-20","2026-04-27","2026-05-04","2026-05-11","2026-05-18","2026-05-25","2026-06-01","2026-06-08","2026-06-15","2026-06-22","2026-06-29","2026-07-06","2026-07-13","2026-07-20","2026-07-27","2026-08-03","2026-08-10","2026-08-17","2026-08-24","2026-08-31"],"series":{"LDPE":[1020,1020,1070,1080,1075,1085,1085,1085,1085,1085,1085,1085,1085,1080,1080,1080,1100,1100,1125,1125,1130,1135,1130,1170,1200,1210,1210,1210,1210,1200,1200,1190,1170,1150,1150,1150,1150,1150,1150,1160,1160,1170,1190,1190,1190,1190,1190,1170,1170,1170,1190,1185,1185,1185,1180,1175,1170,1170,1170,1180,1185,1190,1170,1170,1165,1170,1170,1130,1130,1100,1090,1090,1065,1070,1050,1055,1055,1075,1075,1075,1080,1080,1085,1085,1085,1075,1075,1075,1080,1080,1080,1075,1075,1075,1065,1065,1045,1030,1030,1005,990,980,970,960,960,960,950,960,960,990,980,990,990,990,1080,1180,1235,1415,1460,1560,1520,1465,1475,1475,1470,1455,1365,1310,1295,1255,1190,1195,1145,1215,1195,1210,1215,1220,1240,1260],"LLDPE":[935,935,965,955,945,945,945,945,945,945,940,940,935,930,925,925,945,945,960,965,965,970,965,975,975,975,975,980,975,965,955,945,945,935,935,935,930,930,930,940,940,955,965,965,965,960,955,945,945,935,935,950,950,950,945,940,935,935,935,930,935,935,935,935,930,935,945,895,895,875,875,875,850,865,835,840,840,865,865,865,865,865,860,860,860,855,855,855,855,855,855,855,855,855,845,840,835,835,835,815,795,795,790,775,775,775,765,775,775,785,775,785,785,785,845,935,955,1080,1165,1215,1195,1155,1180,1180,1160,1140,1110,1085,1070,1010,985,960,905,985,955,925,935,975,1005,995],"HDPE":[877,877,897,907,917,922,922,922,922,907,912,912,912,912,912,912,912,912,927,932,932,937,932,937,937,937,937,937,937,932,927,922,922,902,897,897,897,897,897,907,907,917,917,917,917,917,917,907,897,897,877,877,877,877,877,877,872,872,872,872,872,872,872,872,872,877,877,857,857,852,852,852,847,852,847,847,847,857,857,857,857,857,857,857,857,857,857,857,857,857,857,857,857,857,852,852,847,847,847,842,837,827,827,817,817,817,822,827,797,807,817,827,827,822,892,1012,1012,1127,1172,1262,1262,1227,1207,1207,1207,1192,1167,1117,1107,1087,997,972,972,1002,1002,1002,997,1017,1022,997],"PPROP":[968,968,953,953,958,963,963,963,963,968,968,968,983,983,983,993,993,993,1008,1008,1003,1013,1023,1028,1028,1018,1018,1023,1013,1008,1008,1008,998,993,983,988,963,958,958,963,983,988,988,983,983,983,983,983,983,978,973,973,973,973,968,968,968,968,968,973,973,973,973,968,963,958,963,953,953,953,943,933,953,963,963,963,953,963,953,973,983,983,973,958,958,958,953,948,948,938,933,933,928,928,918,893,893,878,863,858,853,858,853,848,843,843,858,873,893,908,913,913,913,933,1023,1173,1273,1303,1323,1323,1333,1333,1323,1333,1338,1313,1303,1303,1293,1223,1098,1093,1078,1133,1143,1178,1183,1183,1198,1198],"PET":[815,815,820,830,860,865,865,865,835,850,835,835,835,835,855,855,845,845,845,820,815,820,845,825,825,830,830,840,860,860,850,835,825,825,820,820,795,775,745,770,790,805,780,775,740,740,740,740,730,735,720,740,740,740,730,750,745,745,735,750,750,745,740,735,735,740,740,665,680,675,695,695,725,725,720,720,715,730,730,720,720,710,715,735,725,715,710,715,710,705,700,695,695,695,685,675,690,685,690,690,685,695,689,685,715,715,745,745,745,770,770,775,775,785,845,955,1145,1095,1105,1135,1115,1145,1175,1195,1160,1125,1075,1075,1040,970,950,885,895,945,945,935,925,930,980,990],"PVC":[740,740,740,740,760,760,760,760,775,780,780,780,785,785,785,785,770,770,770,770,780,785,795,805,805,815,805,790,790,790,795,795,790,790,735,735,740,740,740,745,755,755,735,735,755,755,755,755,745,745,745,735,735,735,735,715,720,720,720,720,715,715,715,715,690,690,690,690,695,690,695,695,695,705,705,705,705,705,715,710,710,710,695,695,695,695,725,700,700,700,700,700,700,700,700,685,685,685,685,685,655,635,635,635,634,634,655,655,675,685,695,715,715,715,745,845,1045,1070,1070,1060,1050,1045,1045,1045,985,925,855,845,755,745,745,740,740,745,775,805,805,805,815,815],"PS":[1150,1150,1150,1170,1180,1180,1200,1200,1220,1250,1260,1275,1285,1280,1285,1310,1310,1330,1305,1305,1305,1315,1315,1295,1300,1290,1285,1295,1295,1270,1250,1250,1250,1255,1250,1250,1250,1240,1240,1240,1240,1240,1220,1220,1215,1215,1210,1210,1200,1200,1200,1210,1210,1210,1185,1180,1190,1190,1195,1200,1200,1190,1175,1155,1155,1140,1140,1140,1140,1135,1095,1095,1125,1125,1105,1095,1080,1080,1080,1080,1080,1080,1080,1080,1070,1060,1060,1060,1055,1050,1050,1030,1030,1030,1015,1010,990,990,990,990,990,985,980,980,980,980,985,995,1015,1035,1085,1085,1085,1105,1155,1335,1435,1580,1660,1680,1665,1600,1570,1570,1540,1540,1465,1430,1370,1350,1290,1270,1160,1220,1280,1280,1270,1270,1280,1290],"ABS":[1290,1290,1290,1340,1340,1340,1360,1360,1380,1415,1425,1440,1445,1450,1455,1470,1490,1510,1510,1510,1510,1530,1530,1510,1505,1495,1495,1505,1505,1505,1505,1505,1505,1520,1515,1515,1515,1505,1505,1500,1510,1510,1480,1480,1475,1475,1470,1470,1465,1465,1460,1470,1470,1470,1470,1470,1470,1470,1480,1490,1490,1480,1470,1450,1450,1440,1440,1430,1410,1410,1390,1380,1410,1410,1390,1390,1370,1380,1380,1370,1355,1355,1355,1345,1345,1345,1345,1335,1325,1320,1320,1310,1305,1305,1285,1285,1260,1260,1260,1260,1260,1255,1230,1230,1230,1230,1240,1250,1280,1330,1339,1360,1360,1375,1425,1610,1800,1850,1950,1950,1935,1900,1910,1900,1870,1890,1800,1780,1630,1620,1580,1560,1550,1560,1580,1580,1550,1580,1580,1550]}}}};
+const UPDATE = {
+  "date": "2026-08-31",
+  "title": "Marktupdate week 36: PE na de zomer weer licht omhoog",
+  "text": "LDPE in Europa staat op 2.528 per ton, 1,6% hoger dan vorige week. LLDPE (stretchfolie) en HDPE stegen rond de 1%. Na de piek van begin juni is PE nog 17 tot 19% goedkoper, maar wel 35 tot 45% duurder dan in januari. Plan je een grote bestelling folie of zakken? Dan is dit een redelijk moment: de prijzen zijn stabiel en we verwachten op korte termijn geen grote sprongen.",
+  "by": "Roderick Klaver, inkoop VerpakkingenXL"
+}
+;
+
+const POLY = {
+  LDPE:  { name: 'LDPE',  color: '#0b99bc', desc: 'noppenfolie, coex verzendzakken, LDPE-zakken' },
+  LLDPE: { name: 'LLDPE', color: '#eb6834', desc: 'stretchfolie' },
+  HDPE:  { name: 'HDPE',  color: '#6250d6', desc: 'dunne (ritsel)zakjes, afvalzakken' },
+  PPROP: { name: 'PP',    color: '#eda100', desc: 'tape, PP-band, PP-zakken' },
+  PET:   { name: 'PET',   color: '#e87ba4', desc: 'flessen, bakjes, PET-band' },
+  PVC:   { name: 'PVC',   color: '#008300', desc: 'PVC-tape, krimpfolie' },
+  PS:    { name: 'PS',    color: '#1c5cab', desc: 'bekers, schuim' },
+  ABS:   { name: 'ABS',   color: '#e34948', desc: 'harde kunststof onderdelen' }
+};
+const ORDER = ['LDPE','LLDPE','HDPE','PPROP','PET','PVC','PS','ABS'];
+const MARKET = { DE: 'Europa (Duitsland)', CN: 'Azië (China)' };
+const MONTHS = ['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
+const nf = new Intl.NumberFormat('nl-NL');
+const nf1 = new Intl.NumberFormat('nl-NL', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const eur = new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+function fmtDate(iso, long) {
+  const [y, m, d] = iso.split('-').map(Number);
+  return long ? d + ' ' + ['januari','februari','maart','april','mei','juni','juli','augustus','september','oktober','november','december'][m-1] + ' ' + y
+              : d + ' ' + MONTHS[m-1] + ' ' + y;
+}
+function pct(a, b) { return (a == null || b == null || !b) ? null : (a / b - 1) * 100; }
+function signPct(v) { return v == null ? 'n.b.' : (v > 0 ? '+' : '') + nf1.format(v) + '%'; }
+function lastIdx(arr) { for (let i = arr.length - 1; i >= 0; i--) if (arr[i] != null) return i; return -1; }
+
+const params = new URLSearchParams(location.search);
+const VIEW = params.get('view') === 'calculator' ? 'calc' : 'grafiek';
+document.getElementById('viewGrafiek').hidden = VIEW !== 'grafiek';
+document.getElementById('viewCalc').hidden = VIEW !== 'calc';
+
+/* ---------- GRAFIEK ---------- */
+const state = { market: 'DE', range: '52', mode: 'price', on: new Set(['LDPE','LLDPE','HDPE']) };
+
+function setupSeg(id, key) {
+  const el = document.getElementById(id);
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    state[key] = b.dataset.v;
+    el.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b ? 'true' : 'false'));
+    render();
+  });
+}
+
+function buildChips() {
+  const c = document.getElementById('chips');
+  c.innerHTML = '';
+  ORDER.forEach(p => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.dataset.p = p;
+    b.setAttribute('aria-pressed', state.on.has(p) ? 'true' : 'false');
+    b.title = 'Gebruikt voor: ' + POLY[p].desc;
+    b.innerHTML = '<span class="dot" style="background:' + POLY[p].color + '"></span>' + POLY[p].name;
+    b.addEventListener('click', () => {
+      if (state.on.has(p)) { if (state.on.size > 1) state.on.delete(p); } else state.on.add(p);
+      b.setAttribute('aria-pressed', state.on.has(p) ? 'true' : 'false');
+      render();
+    });
+    c.appendChild(b);
+  });
+}
+
+function windowed() {
+  const m = DATA.markets[state.market];
+  const n = m.dates.length;
+  const start = state.range === 'all' ? 0 : Math.max(0, n - Number(state.range) - 1);
+  return { m, start, end: n - 1 };
+}
+
+function renderTiles() {
+  const m = DATA.markets[state.market];
+  const t = document.getElementById('tiles');
+  t.innerHTML = '';
+  ORDER.filter(p => state.on.has(p)).forEach(p => {
+    const s = m.series[p]; const i = lastIdx(s);
+    const d4 = pct(s[i], s[i-4]); const d52 = pct(s[i], s[i-52]);
+    const cls = v => v == null ? '' : v > 0 ? 'up' : v < 0 ? 'down' : '';
+    const el = document.createElement('div');
+    el.className = 'tile'; el.style.borderLeftColor = POLY[p].color;
+    el.innerHTML = '<div class="n"><span class="dot" style="display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;background:' + POLY[p].color + '"></span>' + POLY[p].name + (window.innerWidth > 560 ? ' · ' + MARKET[state.market] : '') + '</div>' +
+      '<div class="v">' + nf.format(s[i]) + ' <small>per ton</small></div>' +
+      '<div class="d">4 weken: <span class="' + cls(d4) + '">' + signPct(d4) + '</span> · 1 jaar: <span class="' + cls(d52) + '">' + signPct(d52) + '</span></div>';
+    t.appendChild(el);
+  });
+}
+
+let geom = null;
+function renderChart() {
+  const svg = document.getElementById('chart');
+  const W = Math.max(320, svg.parentNode.clientWidth);
+  const H = W < 560 ? 300 : W < 800 ? 360 : 420;
+  const pad = { l: 52, r: W < 560 ? 54 : 70, t: 14, b: 30 };
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  const { m, start, end } = windowed();
+  const dates = m.dates.slice(start, end + 1);
+  const keys = ORDER.filter(p => state.on.has(p));
+  const series = keys.map(p => {
+    const raw = m.series[p].slice(start, end + 1);
+    let base = raw.find(v => v != null);
+    const vals = state.mode === 'index' ? raw.map(v => v == null ? null : v / base * 100) : raw;
+    return { p, vals, raw };
+  });
+  let lo = Infinity, hi = -Infinity;
+  series.forEach(s => s.vals.forEach(v => { if (v != null) { lo = Math.min(lo, v); hi = Math.max(hi, v); } }));
+  const span = hi - lo || 1;
+  const step = niceStep(span / 5);
+  lo = Math.floor((lo - span * 0.05) / step) * step; hi = Math.ceil((hi + span * 0.05) / step) * step;
+  const x = i => pad.l + (W - pad.l - pad.r) * (dates.length === 1 ? 0 : i / (dates.length - 1));
+  const y = v => pad.t + (H - pad.t - pad.b) * (1 - (v - lo) / (hi - lo));
+  let h = '<g class="grid">';
+  for (let v = lo; v <= hi + 1e-9; v += step) h += '<line x1="' + pad.l + '" x2="' + (W - pad.r) + '" y1="' + y(v) + '" y2="' + y(v) + '"/>';
+  h += '</g><g class="axis">';
+  for (let v = lo; v <= hi + 1e-9; v += step) h += '<text x="' + (pad.l - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + nf.format(Math.round(v)) + '</text>';
+  // x ticks: first week of month, thinned
+  const ticks = [];
+  dates.forEach((d, i) => { if (i === 0 || d.slice(5, 7) !== dates[i-1].slice(5, 7)) ticks.push(i); });
+  const every = Math.ceil(ticks.length / (W < 560 ? 4 : 8));
+  ticks.filter((_, k) => k % every === 0).forEach(i => {
+    const [yy, mm] = dates[i].split('-').map(Number);
+    h += '<text x="' + x(i) + '" y="' + (H - 8) + '" text-anchor="middle">' + MONTHS[mm-1] + " '" + String(yy).slice(2) + '</text>';
+  });
+  h += '</g>';
+  if (state.mode === 'index') h += '<line x1="' + pad.l + '" x2="' + (W - pad.r) + '" y1="' + y(100) + '" y2="' + y(100) + '" stroke="#bbb" stroke-dasharray="4 4"/>';
+  // lines
+  const ends = [];
+  series.forEach(s => {
+    let d = '', pen = false;
+    s.vals.forEach((v, i) => { if (v == null) { pen = false; return; } d += (pen ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(v).toFixed(1); pen = true; });
+    h += '<path d="' + d + '" fill="none" stroke="' + POLY[s.p].color + '" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+    const li = lastIdx(s.vals);
+    ends.push({ p: s.p, y: y(s.vals[li]), x: x(li) });
+  });
+  // direct end labels, de-collided
+  ends.sort((a, b) => a.y - b.y);
+  for (let k = 1; k < ends.length; k++) if (ends[k].y - ends[k-1].y < 14) ends[k].y = ends[k-1].y + 14;
+  ends.forEach(e => {
+    h += '<circle cx="' + e.x + '" cy="' + e.y + '" r="0"/>';
+    h += '<text x="' + (W - pad.r + 8) + '" y="' + (e.y + 4) + '" font-size="12" font-weight="600" fill="#333">' + POLY[e.p].name + '</text>';
+  });
+  h += '<line id="xh" y1="' + pad.t + '" y2="' + (H - pad.b) + '" stroke="#999" stroke-width="1" visibility="hidden"/>';
+  h += '<g id="dots"></g>';
+  h += '<rect id="hit" x="' + pad.l + '" y="' + pad.t + '" width="' + (W - pad.l - pad.r) + '" height="' + (H - pad.t - pad.b) + '" fill="transparent"/>';
+  svg.innerHTML = h;
+  geom = { W, H, pad, x, y, dates, series };
+  const hit = svg.querySelector('#hit');
+  const move = ev => {
+    const r = svg.getBoundingClientRect();
+    const cx = ((ev.touches ? ev.touches[0].clientX : ev.clientX) - r.left) * (W / r.width);
+    const i = Math.max(0, Math.min(dates.length - 1, Math.round((cx - pad.l) / (W - pad.l - pad.r) * (dates.length - 1))));
+    showTip(i, r);
+  };
+  hit.addEventListener('mousemove', move);
+  hit.addEventListener('touchstart', move, { passive: true });
+  hit.addEventListener('touchmove', move, { passive: true });
+  hit.addEventListener('mouseleave', hideTip);
+}
+
+function showTip(i, r) {
+  const { W, x, y, dates, series } = geom;
+  const svg = document.getElementById('chart');
+  const xh = svg.querySelector('#xh');
+  xh.setAttribute('x1', x(i)); xh.setAttribute('x2', x(i)); xh.setAttribute('visibility', 'visible');
+  let dots = '';
+  let rows = '';
+  series.slice().sort((a, b) => (b.vals[i] ?? -1) - (a.vals[i] ?? -1)).forEach(s => {
+    const v = s.vals[i]; if (v == null) return;
+    dots += '<circle cx="' + x(i) + '" cy="' + y(v) + '" r="4.5" fill="' + POLY[s.p].color + '" stroke="#fff" stroke-width="2"/>';
+    const shown = state.mode === 'index' ? nf1.format(v) : nf.format(v);
+    rows += '<div class="r"><span><i class="sw" style="background:' + POLY[s.p].color + '"></i>' + POLY[s.p].name + '</span><span>' + shown + '</span></div>';
+  });
+  svg.querySelector('#dots').innerHTML = dots;
+  const tip = document.getElementById('tip');
+  tip.innerHTML = '<div class="t">Week van ' + fmtDate(dates[i]) + '</div>' + rows + (state.mode === 'index' ? '' : '<div class="note" style="margin-top:4px">per ton</div>');
+  tip.style.display = 'block';
+  const scale = r.width / W;
+  let left = x(i) * scale + 14;
+  if (left + tip.offsetWidth > r.width) left = x(i) * scale - tip.offsetWidth - 14;
+  tip.style.left = Math.max(0, left) + 'px';
+  const ys = series.map(s => s.vals[i]).filter(v => v != null).map(v => y(v) * scale);
+  const th = tip.offsetHeight, ch = r.height;
+  let top = Math.max(...ys) + 14;
+  if (top + th > ch) top = Math.min(...ys) - th - 14;
+  tip.style.top = Math.max(0, Math.min(top, ch - th)) + 'px';
+}
+function hideTip() {
+  document.getElementById('tip').style.display = 'none';
+  const svg = document.getElementById('chart');
+  const xh = svg.querySelector('#xh'); if (xh) xh.setAttribute('visibility', 'hidden');
+  const d = svg.querySelector('#dots'); if (d) d.innerHTML = '';
+}
+
+function niceStep(raw) {
+  const p = Math.pow(10, Math.floor(Math.log10(raw)));
+  const f = raw / p;
+  return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * p;
+}
+
+function renderTable() {
+  const m = DATA.markets[state.market];
+  const keys = ORDER.filter(p => state.on.has(p));
+  let h = '<thead><tr><th>Week van</th>' + keys.map(p => '<th>' + POLY[p].name + '</th>').join('') + '</tr></thead><tbody>';
+  for (let i = m.dates.length - 1; i >= Math.max(0, m.dates.length - 26); i--) {
+    h += '<tr><td>' + fmtDate(m.dates[i]) + '</td>' + keys.map(p => '<td>' + (m.series[p][i] == null ? '–' : nf.format(m.series[p][i])) + '</td>').join('') + '</tr>';
+  }
+  document.getElementById('table').innerHTML = h + '</tbody>';
+}
+
+function render() { renderTiles(); renderChart(); renderTable(); }
+
+if (VIEW === 'grafiek') {
+  document.getElementById('lastDate').textContent = fmtDate(DATA.updated, true);
+  if (UPDATE && UPDATE.text) {
+    document.getElementById('updateBox').hidden = false;
+    document.getElementById('updateTitle').textContent = UPDATE.title;
+    document.getElementById('updateText').textContent = UPDATE.text;
+    document.getElementById('updateBy').textContent = UPDATE.by + ' · ' + fmtDate(UPDATE.date, true);
+  }
+  setupSeg('segMarket', 'market'); setupSeg('segRange', 'range'); setupSeg('segMode', 'mode');
+  buildChips(); render();
+  let rt; window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(renderChart, 120); });
+}
+
+/* ---------- CALCULATOR ---------- */
+const PRODUCTS = [
+  { id: 'stretch', name: 'Stretchfolie (hand- en machinefolie)', poly: 'LLDPE', url: 'https://www.verpakkingenxl.nl/folie/stretchfolie/' },
+  { id: 'coex', name: 'Coex verzendzakken', poly: 'LDPE', url: 'https://www.verpakkingenxl.nl/zakken/verzendzakken/coex-verzendzakken/' },
+  { id: 'nop', name: 'Noppenfolie', poly: 'LDPE', url: 'https://www.verpakkingenxl.nl/inpakken-en-bescherming/noppenfolie/' },
+  { id: 'ldpe', name: 'LDPE-zakken en gripzakjes', poly: 'LDPE', url: 'https://www.verpakkingenxl.nl/zakken/ldpe-zakken/' },
+  { id: 'hdpe', name: 'HDPE-zakken (dunne zakjes, afvalzakken)', poly: 'HDPE', url: 'https://www.verpakkingenxl.nl/hygiene/afvalbeheer/afvalzakken/' }
+];
+const SHARE_LO = 0.60, SHARE_HI = 0.70;
+
+function calcSetup() {
+  const sel = document.getElementById('cProduct');
+  PRODUCTS.forEach(p => { const o = document.createElement('option'); o.value = p.id; o.textContent = p.name; sel.appendChild(o); });
+  const pr = params.get('product'); if (pr && PRODUCTS.some(p => p.id === pr)) sel.value = pr;
+  ['cProduct','cPeriod'].forEach(id => document.getElementById(id).addEventListener('change', fillPct));
+  document.getElementById('cPct').addEventListener('input', () => { document.getElementById('cPeriod').value = 'custom'; document.getElementById('cPctHint').textContent = 'Eigen percentage. Gebruik een minteken voor een daling.'; });
+  ['cProduct','cPeriod','cSpend','cPct'].forEach(id => { const el = document.getElementById(id); el.addEventListener('input', calc); el.addEventListener('change', calc); });
+  fillPct(); calc();
+}
+function product() { return PRODUCTS.find(p => p.id === document.getElementById('cProduct').value); }
+function fillPct() {
+  const p = product();
+  document.getElementById('cPolyHint').textContent = 'Grondstof: ' + POLY[p.poly].name + ' (notering Europa)';
+  const per = document.getElementById('cPeriod').value;
+  const hint = document.getElementById('cPctHint');
+  if (per === 'custom') { hint.textContent = 'Eigen percentage. Gebruik een minteken voor een daling.'; return; }
+  const s = DATA.markets.DE.series[p.poly]; const d = DATA.markets.DE.dates;
+  const i = lastIdx(s); const j = Math.max(0, i - Number(per));
+  const v = pct(s[i], s[j]);
+  document.getElementById('cPct').value = v == null ? '' : v.toFixed(1);
+  hint.textContent = POLY[p.poly].name + ' ging van ' + nf.format(s[j]) + ' (' + fmtDate(d[j]) + ') naar ' + nf.format(s[i]) + ' per ton (' + fmtDate(d[i]) + ').';
+}
+function calc() {
+  const p = product();
+  const spend = parseFloat(String(document.getElementById('cSpend').value).replace(',', '.'));
+  const g = parseFloat(String(document.getElementById('cPct').value).replace(',', '.'));
+  const out = document.getElementById('out');
+  if (!(spend > 0) || isNaN(g)) { out.innerHTML = '<div class="verdict" style="background:#fff6e5;border-left-color:#d98a00">Vul je inkoop per jaar en een percentage in.</div>'; return; }
+  const lo = spend * g / 100 * SHARE_LO, hi = spend * g / 100 * SHARE_HI;
+  const pLo = g * SHARE_LO, pHi = g * SHARE_HI;
+  const rising = g >= 0;
+  const range = (a, b) => eur.format(Math.abs(Math.min(a, b))) + ' tot ' + eur.format(Math.abs(Math.max(a, b)));
+  const verdict = g === 0 ? 'Geen grondstofbeweging, dus geen effect op je kosten vanuit de grondstof.'
+    : (rising ? 'Je kosten voor ' + p.name.toLowerCase() + ' kunnen met ' + range(lo, hi) + ' per jaar stijgen.'
+              : 'Je kosten voor ' + p.name.toLowerCase() + ' kunnen met ' + range(lo, hi) + ' per jaar dalen.');
+  out.innerHTML = '<div class="verdict">' + verdict + '</div>' +
+    '<div class="rows">' +
+      '<div class="row"><span>Grondstof ' + POLY[p.poly].name + '</span><span>' + signPct(g) + '</span></div>' +
+      '<div class="row"><span>Aandeel grondstof in de kostprijs</span><span>60 tot 70%</span></div>' +
+      '<div class="row"><span>Verwacht effect op de productprijs</span><span>' + signPct(Math.min(pLo, pHi)).replace('%','') + ' tot ' + signPct(Math.max(pLo, pHi)) + '</span></div>' +
+      '<div class="row"><span>Jouw inkoop nu</span><span>' + eur.format(spend) + '</span></div>' +
+      '<div class="row"><span>Jouw inkoop na doorrekening</span><span>' + eur.format(spend + Math.min(lo, hi)) + ' tot ' + eur.format(spend + Math.max(lo, hi)) + '</span></div>' +
+    '</div>' +
+    '<p class="note">Indicatie. Grondstof is ongeveer 60 tot 70% van de kostprijs van folie en zakken. De rest is productie, energie, verpakking en transport. Een beweging in de grondstof komt meestal met enkele weken vertraging in de inkoopprijs terecht. <a href="' + p.url + '" target="_top" style="color:#0b99bc;font-weight:600">Bekijk ' + p.name.toLowerCase() + ' →</a></p>';
+}
+if (VIEW === 'calc') calcSetup();
+</script>
+</body>
+</html>
