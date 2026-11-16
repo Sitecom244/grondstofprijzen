@@ -1,3 +1,4 @@
+# LET OP (16 nov 2026): artikel_template_fr.html en _de.html zijn daarna met de hand aangevuld (links naar stretchfolie-artikel en interview). Niet opnieuw draaien zonder die links over te nemen.
 """Genereert artikel_template_fr.html en artikel_template_de.html met dezelfde inline-opmaak als het NL-artikel."""
 H2 = '<h2 style="font-family: inherit; font-size: 25px; line-height: 1.3; margin: 35px 0 12px 0; padding-bottom: 8px; border-bottom: 2px solid #0b99bc;">{}</h2>'
 H3 = '<h3 style="font-family: inherit; font-size: 20px; line-height: 1.3; margin: 25px 0 10px 0;">{}</h3>'
