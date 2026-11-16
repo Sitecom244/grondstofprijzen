@@ -23,7 +23,7 @@ vs_peak = [abs(S[p][i] / peak[p] - 1) * 100 for p in peak]
 vs_jan = [(S[p][i] / S[p][jan] - 1) * 100 for p in peak]
 fill = {
     '%%DATUM%%': datum(ds[i]), '%%LDPE%%': nl(S['LDPE'][i]), '%%LLDPE%%': nl(S['LLDPE'][i]), '%%HDPE%%': nl(S['HDPE'][i]),
-    '%%VS_PIEK%%': rng(vs_peak), '%%VS_JAN%%': rng(vs_jan), '%%WIDGET%%': widget, '%%HEADERIMG%%': img,
+    '%%VS_PIEK%%': rng(vs_peak), '%%VS_JAN%%': rng(vs_jan), '%%WIDGET%%': widget,
 }
 html = open(__file__.replace('build_artikel.py', 'artikel_template.html'), encoding='utf-8').read()
 for k, v in fill.items(): html = html.replace(k, v)
